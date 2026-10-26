@@ -1,0 +1,41 @@
+---
+description: Gangwha-fe code structure, component split, and Next.js server-first rules
+globs:
+alwaysApply: true
+---
+
+# Gangwha-fe code rules
+
+## Split and reuse
+- Anything that can be split or reused must be pulled out: shared UI into `src/components/ui`, feature UI into `src/features/<feature>/components`, logic into hooks or `lib` functions.
+- Do not put too much code in one file. One component per file. If a file grows past about 150 lines or handles more than one concern, split it.
+- Page files (`src/app/**/page.tsx`) stay thin: fetch data and compose feature components. Real logic lives in `src/features`.
+- Follow the folder architecture:
+  - `src/app/` routes only, grouped as `(shop)`, `(seller)`, `(auth)`
+  - `src/features/<feature>/` `components`, `hooks`, `api`, `types`, `utils`
+  - `src/components/ui/` shared primitives
+  - `src/lib/` API client, utilities, constants
+- Before writing something new, reuse what already exists (see ponytail.mdc). Splitting is for real reuse or real separation of concerns, not for empty abstraction layers.
+
+## Server components first
+- Every component is a Server Component by default. Do not add `"use client"` unless it needs state, effects, event handlers, or browser APIs.
+- Push `"use client"` down to the smallest leaf (a button, a filter, a slider), never on a page or layout.
+- Fetch data in Server Components with `fetch` and Next.js caching/revalidation; do not fetch in `useEffect`.
+- Pass server data to client leaves as serializable props. Use Server Actions for mutations where it fits.
+- Use `next/image`, `next/link`, and `generateMetadata` for SEO pages.
+
+## Concise code
+- Write the shortest clear code. No dead code, no unused props, no boilerplate nobody asked for.
+- TypeScript strict. No `any`. Validate external data (API responses, forms, env) with Zod.
+
+## Readability
+- Name magic numbers as constants (`const ANIMATION_DELAY_MS = 300`).
+- Abstract complex logic or interactions into dedicated components or hooks (e.g. an `AuthGuard` wrapper, an `InviteButton` that owns its dialog).
+- When conditional UI differs a lot, split it into separate components instead of branching inside one.
+- Replace nested ternaries with `if` statements or a small IIFE.
+- Keep simple, local logic next to where it is used (inline `switch`, a small policy object) so code reads top to bottom.
+- Name complex boolean conditions (`const isPriceInRange = ...`); do not name trivial single-use ones.
+
+## Predictability
+- Similar functions and hooks return the same shape. Query hooks return the TanStack Query result object as-is.
+- Validation functions return a discriminated union: `{ ok: true } | { ok: false; reason: string }`.

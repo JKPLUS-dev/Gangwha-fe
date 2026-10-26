@@ -1,0 +1,112 @@
+---
+description: UI/UX 작업 규칙 (impeccable + taste-skill + ui-ux-pro-max). 페이지·컴포넌트·스타일을 만들거나 고칠 때 적용.
+globs: src/**/*.tsx, src/**/*.ts, src/**/*.css, app/**/*.tsx
+alwaysApply: true
+---
+
+# Gangwha-fe UI 규칙
+
+강화도 소상공인 지역 오픈마켓(쇼핑몰) 프론트엔드. Next.js App Router + TypeScript + Tailwind.
+대상 사용자: 전국 소비자, 관광객, 단체 구매자, 고령층 포함. 공공몰 성격이라 신뢰감·가독성 우선.
+
+아래 세 스킬을 UI 작업마다 순서대로 사용한다. 스킬이 없으면 아래 요약 규칙을 그대로 지킨다.
+
+---
+
+## 1. impeccable (pbakaus/impeccable)
+
+위치: `.agents/skills/impeccable/SKILL.md` 또는 `~/.agents/skills/impeccable/SKILL.md`
+
+절차
+1. 세션마다 한 번, 프로젝트 루트를 cwd로 두고 context 실행. 대상 파일/라우트는 `--target <path>`로 넘긴다.
+   - `node <skill>/scripts/context.mjs --target <path>` (또는 `<skill>/scripts/impeccable context --target <path>`, Windows에서 sh 없으면 `impeccable.cmd`)
+   - PRODUCT.md / DESIGN.md / surface brief를 읽고 지시를 따른다. 다시 실행하지 않는다.
+   - 실행 실패 시: "Context loading did not run; I'll read the existing project context directly."라고 먼저 알리고 PRODUCT.md, DESIGN.md를 직접 읽는다. 없는 컨텍스트를 지어내지 않는다.
+2. 요청에 맞는 커맨드 레퍼런스(polish, audit, harden, layout, typeset 등)를 로드. 새 화면이면 `reference/new-work.md`.
+3. 방향이 정해진 뒤, **UI를 수정하기 직전에 반드시 `reference/craft-floor.md`를 로드**한다(작은 수정 포함). 계획만 하는 작업엔 로드하지 않는다.
+4. 웹 UI 수정이 끝나면 자동 훅이 없을 경우 `node <skill>/scripts/detect.mjs --json <target>`을 한 번 실행한다.
+
+원칙
+- **좁은 수정(refinement)은 기존 정체성을 유지한다.** 현재 FIRE / 몰(mall) 룩, 카피, 범위 밖 요소는 건드리지 않는다. 전면 리디자인은 명시적으로 요청받았을 때만.
+- 브리프가 이긴다. 지정된 폰트·팔레트·톤을 내 취향으로 바꾸지 않는다.
+- 모드: 쇼핑 화면(목록·상세·장바구니·주문·마이페이지·판매자)은 **Operate**(스캔성·일관성·익숙한 패턴 우선), 기획전·랜딩은 **Persuade**.
+- 사실 카피나 주장을 새로 추가하거나 바꾸기 전엔 묻는다.
+
+craft-floor 체크 (완성물 기준 검증)
+- 대비: 본문·placeholder ≥ 4.5:1, 큰 글자 ≥ 3:1. 색 배경 위 보조 텍스트는 회색 대신 그 색조로.
+- 간격: 묶음은 촘촘하게, 구분은 넉넉하게. 제목 위 여백 > 아래 여백.
+- 타이포: 본문 65–75ch, display 최대 6rem, 자간 하한 -0.04em(보통 -0.02~-0.03em), 단계가 분명한 크기·굵기.
+- 모션: 한 번의 의도된 순간. 모든 섹션에 같은 등장 애니메이션 금지. 기본 상태는 이미 보이게.
+- 상태: hover, disabled, loading, error, empty + 실제 콘텐츠, 동작하는 컨트롤, 반응형, 키보드 포커스.
+- 카피: 컨트롤은 동작을 말하고, 에러는 문제와 해결 방법을 말한다.
+- 깊이: 그림자는 offset + 부드러운 blur. elevation은 border 또는 shadow 하나만. 카드 radius 12–16px, pill은 작은 컨트롤에만.
+
+craft-floor 거부 목록 (브리프가 요구하지 않으면 쓰지 않음)
+- 같은 크기 아이콘+제목+텍스트 카드 나열을 페이지 구조로 쓰기, 중첩 카드(항상 금지)
+- 큰 숫자+작은 라벨 hero-metric 템플릿, 섹션마다 uppercase eyebrow, 의미 없는 01/02/03
+- 불필요한 모달, gradient 텍스트, 장식용 glass/blur, 1px 초과 컬러 border-left/right 강조
+- 콘텐츠 대신 sparkline·progress ring·둥근 박스, "기술적" 코스튬용 monospace
+- 스케치풍 SVG, feTurbulence 노이즈, 의미 없는 줄무늬/그리드 배경
+- 지어낸 수치·후기·로고. 예시 값은 예시라고 표시.
+
+---
+
+## 2. taste UI (Leonxlnx/taste-skill, `design-taste-frontend`)
+
+- UI 작업 시작 전에 **한 줄 design read를 선언**한다. 예: "Operate 모드, 지역 특산품 몰, 따뜻한 흰 바탕 + 강화 브랜드 한 가지 강조색, 큰 상품 사진 중심, 고령층 가독성 우선."
+- 먼저 판단: **page**(기획전·랜딩·브랜드 소개, 읽고 스크롤)인지 **app screen**(목록 필터, 장바구니, 주문, 마이페이지, 판매자 대시보드)인지. app screen은 `references/app-screens.md` 규칙을 따른다(조용한 패널·작은 라벨 허용, gradient·glow·틴트 사각형 아이콘·무지개 차트·가짜 수치 금지).
+- **상품 화면에 AI 기본 랜딩 slop 금지**: 가운데 정렬 헤드라인 + 위의 작은 라벨 + 아이콘 카드 줄 + 부드러운 gradient + 얇은 선 + monospace 캡션 조합.
+
+하우스 룰 (page 작업)
+- 헤드라인은 모든 폭에서 2줄 이하. 첫 화면에 명확한 h1 하나, 섹션마다 제목.
+- 좌우 바깥 여백 동일, 한쪽만 비는 섹션 금지, 반 화면 넘는 빈 공간 금지.
+- eyebrow·pill 배지·"New ·" 칩 금지. 작은 uppercase 자간 라벨 금지.
+- 코드 외 monospace 금지(숫자 정렬은 tabular figures).
+- hairline 구분선·1px 박스 남발 금지 → 여백, 배경 톤 차이로 구분. (실제 표·폼 필드는 예외)
+- gradient 금지(사진 위 텍스트용 중립 scrim만 예외). 정지 상태 요소에 그림자·glow 금지(메뉴·다이얼로그만).
+- violet/indigo, 크림+테라코타 "AI 팔레트" 금지.
+- glass, 떠 있는 pill 내비 금지 → 평범한 바: 로고, 링크 3–5개, 액션 1개.
+- 이모지 아이콘, gradient blob, 장식 도형, 회색 막대 가짜 대시보드 금지.
+- 헤드라인 강조 단어 스타일링(이탤릭·색·밑줄) 금지. 서체는 최대 2개(보통 1개).
+- 증거는 지어내지 않는다: 가짜 고객·후기·언론·로고·통계 금지.
+- 사진: 큰 한 장이 작은 여섯 장보다 낫다. 같은 비율·같은 처리. 텍스트 위에 아무것도 겹치지 않기.
+- 색: 바탕 하나, 잉크 하나, 강조색 하나(주로 액션에만). 본문은 연회색 말고 진한 잉크색.
+- 텍스트 16–20px, 행간 1.45–1.6. 기본 좌측 정렬. 섹션 간격 > 섹션 내부 간격.
+- 버튼: 플랫, 한 가지 fill, 모서리는 각지게 또는 완전 둥글게 중 하나로 통일.
+- 기존 브랜드/디자인 시스템(FIRE/몰 룩)이 있으면 그 색·서체를 유지하고 구성만 개선.
+
+---
+
+## 3. ui-ux-pro-max (nextlevelbuilder/ui-ux-pro-max-skill)
+
+검색 스크립트: 스킬 폴더의 `scripts/search.py`. Windows는 `py -3`, 없으면 `python`/`python3`.
+- 새 페이지/전체 방향: `py -3 <skill>/scripts/search.py "ecommerce local food marketplace" --design-system -p "Gangwha" -f markdown`
+- 저장 시 `--persist --output-dir <프로젝트 루트>`. `design-system/<slug>/MASTER.md`가 이미 있으면 먼저 읽고, `--force`는 주인님 허락 없이 쓰지 않는다. 페이지별 override(`pages/<page>.md`)가 Master보다 우선.
+- 특정 문제: `--domain ux|style|color|typography|icons|landing|react` 하나만. 예: `"keyboard focus modal" --domain ux`
+- 스택: `--stack nextjs` / `--stack html-tailwind` / `--stack shadcn`
+- 쿼리는 하나의 의도, 2–5단어. 결과가 비거나 엉뚱하면 한 번만 좁혀서 재시도. 그래도 없으면 지어내지 말고 "기본 규칙 기반 권장"이라고 밝힌다. 검증 안 된 결과는 persist 금지.
+
+우선순위 체크 (반드시)
+1. 접근성(CRITICAL): 대비 4.5:1, alt 텍스트, 키보드 이동, 아이콘 버튼 aria-label. focus ring 제거 금지(`focus-visible:` 스타일 필수).
+2. 터치(CRITICAL): **터치 영역 최소 44×44px**, 간격 8px 이상, 로딩 피드백. hover 전용 기능 금지.
+3. 성능: WebP/AVIF(`next/image`), lazy loading, 공간 예약으로 CLS < 0.1.
+4. 스타일: 제품 유형에 맞게 일관성 유지, SVG 아이콘(lucide-react) 사용, 이모지 아이콘 금지.
+5. 레이아웃: 모바일 우선 breakpoint, 가로 스크롤 금지, 고정 px 컨테이너 금지, 줌 비활성화 금지.
+6. 타이포·색: 본문 16px 이상, 행간 1.5, 12px 미만 본문 금지, 회색 위 회색 금지. **컴포넌트에 raw hex 금지 → Tailwind 테마 토큰/CSS 변수 사용.**
+7. 애니메이션: 상황별 duration, 의미 있는 모션, width/height 애니메이션 금지(transform/opacity), `prefers-reduced-motion` 대응(`motion-reduce:`).
+8. 폼: 보이는 label(placeholder만 label로 쓰기 금지), 에러는 필드 옆에, 도움말 텍스트, 단계적 노출.
+9. 내비: 예측 가능한 뒤로가기, 모바일 하단 내비 5개 이하, 딥링크(필터·검색은 URL 쿼리로).
+10. 차트: 범례, 툴팁, 색만으로 의미 전달 금지.
+
+---
+
+## 모든 UI 작업의 완료 조건
+
+- [ ] design read 한 줄 선언함
+- [ ] impeccable context 실행(또는 실패 알림 후 직접 읽음), 수정 전 craft-floor 로드함
+- [ ] 필요한 ui-ux-pro-max 검색을 했고, 결과를 검증 후 적용함
+- [ ] 모든 인터랙티브 요소 44×44px 이상, 키보드 포커스 보임, 대비 4.5:1 이상
+- [ ] loading / empty / error 상태가 모두 있음 (상품 목록, 장바구니, 주문, 검색 결과 필수)
+- [ ] 375px / 768px / 1280px에서 깨짐·가로 스크롤 없음
+- [ ] raw hex, 이모지 아이콘, gradient 텍스트, 중첩 카드, 가짜 데이터 없음
+- [ ] 좁은 수정이면 기존 FIRE / 몰 룩과 범위 밖 코드를 그대로 유지함
