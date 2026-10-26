@@ -88,7 +88,7 @@ export async function ACard({ product }: { product: Product }) {
 export function AGrid({ products, empty = "곧 들어올 예정이에요." }: { products: Product[]; empty?: string }) {
   if (!products.length) return <p className="rounded-3xl bg-white py-12 text-center text-stone-600">{empty}</p>;
   return (
-    <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5">
+    <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 max-md:[&>li:nth-child(odd):last-child]:hidden">
       {products.map((p) => <li key={p.id}><ACard product={p} /></li>)}
     </ul>
   );

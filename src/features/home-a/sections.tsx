@@ -156,7 +156,7 @@ export function ABanner() {
 // 8. 제철
 export async function ASeasonal() {
   const [kimchi, jeot] = await Promise.all([getProducts({ q: "순무" }), getProducts({ q: "젓" })]);
-  const picks = [...kimchi.slice(0, 3), ...jeot.slice(0, 3)];
+  const picks = [...kimchi.slice(0, 3), ...jeot.slice(0, 3), ...kimchi.slice(3), ...jeot.slice(3)].slice(0, 6);
   return (
     <SectionA id="a-season" title="지금 강화는 순무·새우젓 제철" sub="알싸한 순무와 가을 추젓으로 김장 준비" tone="green">
       <div className="grid gap-6 lg:grid-cols-5">
@@ -182,7 +182,7 @@ export async function AGift() {
   if (!sets.length) return null;
   return (
     <SectionA id="a-gift" title="강화 선물세트관" sub="인삼, 섬쌀, 젓갈을 선물 포장해 보내드려요" moreHref="/products?q=%EC%84%B8%ED%8A%B8">
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5">{sets.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
+      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 max-md:[&>li:nth-child(odd):last-child]:hidden">{sets.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
     </SectionA>
   );
 }
