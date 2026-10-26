@@ -55,15 +55,24 @@ export function GanghwaContents({ videos, festivals, stories }: { videos: Conten
           ))}
         </ul>
 
-        <div className="mt-14"><Pill>지역 생산자 이야기</Pill></div>
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="relative mt-14">
+          <Pill>지역 생산자 이야기</Pill>
+          <Link href="/search" className="absolute right-0 top-0 inline-flex h-11 items-center text-sm font-medium text-[#454545] hover:underline md:top-1 md:h-9 md:rounded-md md:border md:border-[#d6d6d6] md:px-3 md:hover:no-underline md:hover:bg-[#f4f4f4]">더보기 &gt;</Link>
+        </div>
+        <ul className="mx-auto grid max-w-[1000px] grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-[13px]">
           {stories.map((s, i) => (
-            <li key={s.id} className="flex flex-col overflow-hidden rounded-xl border border-stone-200">
-              <div className="relative aspect-[3/2]"><Image src={STORY_IMAGES[i % 3]} alt="" fill sizes="(min-width:640px) 305px, 100vw" className="object-cover" loading="eager" /></div>
-              <div className="flex flex-1 flex-col p-4">
-                <p className="font-bold text-[#353535]">&ldquo;{s.title}&rdquo;</p>
-                <p className="mt-1 flex-1 text-sm text-[#585858]">{s.summary}</p>
-                <Link href={s.href ?? "/search"} className="mt-3 inline-flex h-11 items-center self-end text-sm font-semibold text-[#474747] hover:underline">상품 보기 &gt;</Link>
+            <li key={s.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-[#f4f4f4] ring-1 ring-black/[0.04] transition-colors duration-300 hover:bg-[#eeeeee]">
+              <div className="relative aspect-[323/258] overflow-hidden">
+                <Image src={STORY_IMAGES[i % 3]} alt="" fill sizes="(min-width:640px) 323px, 100vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" loading="eager" />
+                {(s.region ?? s.name) && (
+                  <span className="absolute bottom-1 right-1 max-w-[80%] truncate bg-black/70 px-4 py-1 text-center text-base font-medium tracking-tight text-white md:min-w-[172px] md:text-lg">{s.region ?? s.name}</span>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col px-4 pb-3 pt-5 text-center">
+                <p className="text-balance text-xl font-semibold leading-snug tracking-tight text-black md:text-[22px]">&ldquo;{s.quote ?? s.title}&rdquo;</p>
+                {s.name && <p className="mt-3 text-base text-[#3f3f3f] md:text-[17px]"><strong className="font-extrabold">{s.name}</strong></p>}
+                <p className="mx-auto mt-4 max-w-[30ch] flex-1 text-pretty text-[15px] leading-relaxed text-[#4a4a4a] md:text-base">{s.summary}</p>
+                <Link href={s.href ?? "/search"} aria-label={`${s.name ?? s.title} 상품 보기`} className="mt-2 inline-flex h-11 items-center self-end text-base font-medium text-[#454545] hover:underline md:text-lg">상품 보기 &gt;</Link>
               </div>
             </li>
           ))}

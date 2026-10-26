@@ -15,22 +15,20 @@ body {
 }
 
 /* 가로 스크롤 공용: 스크롤바 자리는 6px 항상 확보(높이 변화 없음), 평소엔 투명, hover/focus-within 때만 보여요. 터치 기기는 항상 숨김. */
-.scroll-subtle {
+@utility scroll-subtle {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-}
-.scroll-subtle::-webkit-scrollbar { height: 6px; }
-.scroll-subtle::-webkit-scrollbar-track { background: transparent; }
-.scroll-subtle::-webkit-scrollbar-thumb { background: transparent; border-radius: 9999px; }
-@media (hover: hover) {
-  .scroll-subtle:hover,
-  .scroll-subtle:focus-within { scrollbar-color: var(--color-stone-400) transparent; }
-  .scroll-subtle:hover::-webkit-scrollbar-thumb,
-  .scroll-subtle:focus-within::-webkit-scrollbar-thumb { background: var(--color-stone-400); }
-}
-@media (hover: none) {
-  .scroll-subtle { scrollbar-width: none; }
-  .scroll-subtle::-webkit-scrollbar { display: none; }
+  scrollbar-gutter: stable;
+  &:hover, &:focus-within { scrollbar-color: rgb(0 0 0 / .25) transparent; }
+  /* Safari 대비(크롬 121+는 scrollbar-color가 있으면 아래 무시) */
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: transparent; border-radius: 9999px; }
+  &:hover::-webkit-scrollbar-thumb, &:focus-within::-webkit-scrollbar-thumb { background: rgb(0 0 0 / .25); }
+  @media (hover: none) {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
 }
 
 /* 햄버거 서랍: 왼쪽에서 밀려 들어와요. 움직임 줄이기 설정이면 생략. */

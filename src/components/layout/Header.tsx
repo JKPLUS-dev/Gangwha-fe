@@ -33,10 +33,10 @@ export async function Header() {
         </ul>
       </div>
       <StickyHeader>
-      <div className="relative mx-auto flex max-w-7xl items-center gap-2 px-4 py-2 md:py-3 transition-[padding] md:gap-6 md:py-4 group-data-[compact=true]:py-2">
+      <div className="relative mx-auto flex max-w-7xl items-center gap-2 px-4 py-2 md:py-3 md:gap-6 md:py-4 group-data-[compact=true]:py-2">
         <HamburgerMenu categories={categories} />
         <Link href="/" className="inline-flex h-11 shrink-0 items-center md:h-14">
-          <Image src="/images/logo-full.png" alt="강화도몰" width={2083} height={755} priority sizes="160px" className="hidden h-14 w-auto transition-[height] md:block group-data-[compact=true]:h-10" />
+          <Image src="/images/logo-full.png" alt="강화도몰" width={2083} height={755} priority sizes="160px" className="hidden h-14 w-auto md:block group-data-[compact=true]:h-10" />
           <Image src="/images/logo-symbol.png" alt="강화도몰" width={755} height={755} priority sizes="44px" className="size-11 md:hidden" />
         </Link>
         <div className="flex-1 md:hidden" />

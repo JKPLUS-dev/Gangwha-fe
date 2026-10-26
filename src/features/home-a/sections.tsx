@@ -1,3 +1,4 @@
+import { DragScroll } from "@/components/ui/DragScroll";
 import Image from "next/image";
 import Link from "next/link";
 import { CONTAINER } from "@/components/ui/Container";
@@ -114,7 +115,7 @@ const SIG = [
 export function ASignature() {
   return (
     <SectionA id="a-sig" title="강화 대표 특산품" sub="강화에서만 나는 여섯 가지 맛" tone="white" deco="wave">
-      <ul className="scroll-subtle -mr-4 flex gap-4 overflow-x-auto pb-2 pr-4 md:mr-0 md:grid md:grid-cols-6 md:gap-6 md:overflow-visible md:pr-0">
+      <DragScroll as="ul" className="-mr-4 flex gap-4 overflow-x-auto pb-2 pr-4 md:mr-0 md:grid md:grid-cols-6 md:gap-6 md:overflow-visible md:pr-0">
         {SIG.map((s) => (
           <li key={s.label} className="w-32 shrink-0 md:w-auto">
             <Link href={`/products?q=${encodeURIComponent(s.q)}`} className="group block text-center focus-visible:outline-2 focus-visible:outline-[#2f5d3a]">
@@ -123,7 +124,7 @@ export function ASignature() {
             </Link>
           </li>
         ))}
-      </ul>
+      </DragScroll>
     </SectionA>
   );
 }

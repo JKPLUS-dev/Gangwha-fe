@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
+import { useDragScroll } from "@/lib/useDragScroll";
 
 export type CategoryTabItem = { key: string; label: string; icon: string; ring: string | null; panel: ReactNode };
 
@@ -8,9 +9,10 @@ export type CategoryTabItem = { key: string; label: string; icon: string; ring: 
 export function CategoryTabSwitcher({ tabs }: { tabs: CategoryTabItem[] }) {
   const [active, setActive] = useState(0);
   const id = useId();
+  const ref = useDragScroll<HTMLDivElement>();
   return (
     <>
-      <div role="tablist" aria-label="카테고리" className="flex gap-2 overflow-x-auto scroll-subtle rounded-t-2xl bg-[#f6ebdb] px-4 py-4 md:justify-between md:gap-0 md:px-6">
+      <div ref={ref} role="tablist" aria-label="카테고리" className="flex gap-2 overflow-x-auto scroll-subtle md:cursor-grab rounded-t-2xl bg-[#f6ebdb] px-4 py-4 md:justify-between md:gap-0 md:px-6">
         {tabs.map((t, i) => {
           const on = active === i;
           return (

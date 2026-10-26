@@ -1,4 +1,4 @@
-import { EXHIBITIONS, FESTIVALS, PRODUCER_STORIES, PROMO_VIDEOS, QUICK_CATEGORIES } from "./data";
+import { EXHIBITION_BANNERS, EXHIBITIONS, FESTIVALS, PRODUCER_STORIES, PROMO_VIDEOS, QUICK_CATEGORIES } from "./data";
 
 export async function getQuickCategories() {
   return QUICK_CATEGORIES;
@@ -14,4 +14,8 @@ export async function getFestivals() {
 }
 export async function getProducerStories() {
   return PRODUCER_STORIES;
+}
+
+export async function getExhibitionBanners() {
+  return EXHIBITION_BANNERS;
 }

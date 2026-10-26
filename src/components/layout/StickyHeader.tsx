@@ -32,7 +32,7 @@ const getServerSnapshot = () => false;
 export function StickyHeader({ children }: { children: ReactNode }) {
   const isCompact = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return (
-    <header data-compact={isCompact} className="group sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur transition-shadow data-[compact=true]:shadow-md">
+    <header data-compact={isCompact} className="group sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur transition-shadow data-[compact=true]:mb-[44px] data-[compact=true]:shadow-md md:data-[compact=true]:mb-[60px]">
       {children}
     </header>
   );

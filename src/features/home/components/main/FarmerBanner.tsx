@@ -1,3 +1,4 @@
+import { DragScroll } from "@/components/ui/DragScroll";
 import { CONTAINER } from "@/components/ui/Container";
 import Link from "next/link";
 import type { Seller } from "@/features/product/types";
@@ -14,7 +15,7 @@ export function FarmerBanner({ sellers }: { sellers: FeaturedSeller[] }) {
             className="absolute max-w-none" style={{ width: "121.92%", height: "315.29%", left: "-21.9%", top: "-108.68%" }} />
         </Link>
         {sellers.length > 0 && (
-          <ul className="-mr-4 mt-4 flex snap-x gap-3 overflow-x-auto scroll-subtle pb-2 pr-4 md:mr-0 md:pr-0">
+          <DragScroll as="ul" className="-mr-4 mt-4 flex snap-x gap-3 overflow-x-auto pb-2 pr-4 md:mr-0 md:pr-0">
             {sellers.map((s) => (
               <li key={s.id} className="w-64 shrink-0 snap-start">
                 <Link href={`/sellers/${s.id}`} className="block min-h-11 rounded-xl border border-stone-200 p-4 hover:border-brand">
@@ -24,7 +25,7 @@ export function FarmerBanner({ sellers }: { sellers: FeaturedSeller[] }) {
                 </Link>
               </li>
             ))}
-          </ul>
+          </DragScroll>
         )}
       </div>
     </section>
