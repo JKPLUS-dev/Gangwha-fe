@@ -1,6 +1,5 @@
 import { getExhibitions, getFestivals, getProducerStories, getPromoVideos, getQuickCategories } from "@/features/content/api";
-import { getFeaturedSellers, getProducts, getTimeDeals } from "@/features/product/api";
-import { CATEGORIES, type Category } from "@/features/product/types";
+import { getCategoryTabs, getFeaturedSellers, getProducts, getProductsByQuickCategory, getTimeDeals } from "@/features/product/api";
 import { getNotices } from "@/features/support/data";
 import { CategoryTabs } from "@/features/home/components/main/CategoryTabs";
 import { ExhibitionSection } from "@/features/home/components/main/ExhibitionSection";
@@ -13,14 +12,12 @@ import { QuickCategoryIcons } from "@/features/home/components/main/QuickCategor
 import { ProductCard } from "@/features/product/components/ProductCard";
 
 // 피그마 UPPLUS 784-434 "Desktop - 3" 메인
-const TAB_ORDER = Object.keys(CATEGORIES) as Category[];
-
 export default async function HomePage() {
   const [quick, exhibitions, videos, festivals, stories, fresh, deals, sellers, notices] = await Promise.all([
     getQuickCategories(), getExhibitions(), getPromoVideos(), getFestivals(), getProducerStories(),
     getProducts({ category: "agri", sort: "new" }), getTimeDeals(4), getFeaturedSellers(), getNotices(),
   ]);
-  const tabs = await Promise.all(TAB_ORDER.map(async (c) => ({ key: c, label: CATEGORIES[c], products: await getProducts({ category: c, sort: "best" }) })));
+  const tabs = await Promise.all((await getCategoryTabs()).map(async (t) => ({ slug: t.slug, label: t.label, products: await getProductsByQuickCategory(t.slug) })));
 
   return (
     <>

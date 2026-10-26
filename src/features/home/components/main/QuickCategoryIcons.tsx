@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { QuickCategory } from "@/features/content/data";
 
 // 피그마 원형 아이콘 8개(색 원 + 흰 선 아이콘). 순서대로 매칭해요.
-const ICONS = [
+export const QUICK_ICONS = [
   { ring: "/images/main/ic-ring-1.svg", icon: "/images/main/ic-fire.svg" },
   { ring: "/images/main/ic-ring-2.svg", icon: "/images/main/ic-ticket.svg" },
   { ring: "/images/main/ic-ring-3.svg", icon: "/images/main/ic-shrimp.svg" },
@@ -18,7 +18,7 @@ export function QuickCategoryIcons({ items }: { items: QuickCategory[] }) {
     <nav aria-label="바로가기 카테고리" className="bg-white">
       <ul className="mx-auto grid max-w-[1000px] grid-cols-4 gap-y-6 px-4 py-8 md:grid-cols-8 md:py-10">
         {items.slice(0, 8).map((c, i) => {
-          const ic = ICONS[i % ICONS.length];
+          const ic = QUICK_ICONS[i % QUICK_ICONS.length];
           return (
             <li key={c.slug}>
               <Link href={`/search?q=${encodeURIComponent(c.q)}`} className="group flex min-h-11 flex-col items-center gap-2 rounded-xl text-center focus-visible:outline-2 focus-visible:outline-brand">

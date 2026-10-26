@@ -2,28 +2,22 @@ import { ProductCard } from "@/features/product/components/ProductCard";
 import type { Product } from "@/features/product/types";
 import { CategoryTabSwitcher } from "./CategoryTabSwitcher";
 import { MainTitle } from "./MainTitle";
+import { QUICK_ICONS } from "./QuickCategoryIcons";
 import { ScrollRow } from "./ScrollRow";
 
-export type CategoryTab = { key: string; label: string; products: Product[] };
+export type CategoryTabData = { slug: string; label: string; products: Product[] };
 
-const ICONS: Record<string, string> = {
-  agri: "/images/main/cat-fork-spoon.svg",
-  seafood: "/images/main/cat-store.svg",
-  processed: "/images/main/cat-shelf.svg",
-  craft: "/images/main/cat-palette.svg",
-};
-
-// 피그마 790:369 "카테고리별 상품": 그림자 흰 카드 + 아이콘 탭 바 + 순위 배지 상품 슬라이드
-export function CategoryTabs({ tabs }: { tabs: CategoryTab[] }) {
+// 피그마 790:369 "카테고리별 상품": 그림자 흰 카드 + 아이콘 탭 바(원형 아이콘 8개와 같은 순서) + 순위 배지 상품 슬라이드
+export function CategoryTabs({ tabs }: { tabs: CategoryTabData[] }) {
   return (
     <section aria-labelledby="cat-title" className="bg-white">
       <div className="mx-auto max-w-[1044px] px-4 py-12 md:py-16">
         <div className="md:px-6"><MainTitle id="cat-title" title="카테고리별 상품" desc="카테고리별로 상품을 즐기세요!" /></div>
         <div className="rounded-2xl bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)] ring-1 ring-stone-100">
-          <CategoryTabSwitcher tabs={tabs.map((t) => ({
-            key: t.key,
+          <CategoryTabSwitcher tabs={tabs.map((t, ti) => ({
+            key: t.slug,
             label: t.label,
-            icon: ICONS[t.key] ?? ICONS.agri,
+            ...QUICK_ICONS[ti % QUICK_ICONS.length],
             panel: t.products.length ? (
               <ScrollRow className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-2 md:-mx-6 md:px-6">
                 {t.products.slice(0, 8).map((p, i) => (

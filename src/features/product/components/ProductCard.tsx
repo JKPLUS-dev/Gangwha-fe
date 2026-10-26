@@ -11,8 +11,8 @@ export async function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link href={`/products/${product.id}`} className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">
-      <div className={`relative aspect-square overflow-hidden rounded-xl bg-stone-100 ${product.soldOut ? "opacity-60" : ""}`}>
-        <ProductImage product={product} sizes="(min-width: 768px) 25vw, 50vw" />
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-stone-100">
+        <div className={`absolute inset-0 ${product.soldOut && product.image ? "opacity-60" : ""}`}><ProductImage product={product} sizes="(min-width: 768px) 25vw, 50vw" /></div>
         <div className="absolute bottom-2 left-2 flex gap-1">
           <span className="rounded-md bg-white/95 px-2 py-0.5 text-xs font-semibold text-brand">산지직송</span>
           <span className="rounded-md bg-white/95 px-2 py-0.5 text-xs font-medium text-stone-700">{STORAGE_LABEL[product.storage]}</span>
