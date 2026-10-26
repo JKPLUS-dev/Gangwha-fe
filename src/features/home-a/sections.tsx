@@ -161,7 +161,7 @@ export async function ASeasonal() {
     <SectionA id="a-season" title="지금 강화는 순무·새우젓 제철" sub="알싸한 순무와 가을 추젓으로 김장 준비" tone="green">
       <div className="grid gap-6 lg:grid-cols-5">
         <Link href="/products?q=%EC%88%9C%EB%AC%B4" className="group relative block min-h-72 overflow-hidden rounded-3xl lg:col-span-2">
-          <APhoto src="/images/sunmu.webp" alt="강화 순무김치" className="absolute inset-0" sizes="(min-width:1024px) 40vw, 100vw" />
+          <APhoto src="/images/sunmu.webp" alt="강화 순무김치" className="aspect-[4/3] min-h-72 lg:aspect-auto lg:h-full" sizes="(min-width:1024px) 40vw, 100vw" />
           <span className={`${btnWhite} absolute bottom-6 left-6`}>제철 상품 보기</span>
         </Link>
         <ul className="grid grid-cols-2 gap-4 md:gap-6 lg:col-span-3">{picks.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>

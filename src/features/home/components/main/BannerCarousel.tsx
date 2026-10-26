@@ -24,6 +24,11 @@ export function BannerCarousel({ banners, label = "기획전 배너" }: { banner
   const [paused, setPaused] = useState(false);
   const reduced = useSyncExternalStore(subRM, getRM, getRMServer);
   const touchX = useRef<number | null>(null);
+  // 마우스 드래그: 끌면 따라오고, 놓으면 폭의 15% 넘게 끌었을 때 다음/이전, 아니면 제자리로 스냅해요.
+  // (트랙이 scrollLeft가 아니라 transform이라 useDragScroll 대신 같은 규칙을 포인터 이벤트로 구현)
+  const drag = useRef<{ id: number; x: number; w: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
+  const [dx, setDx] = useState(0);
   const real = n > 1 ? (pos - 1 + n) % n : 0;
 
   const go = (p: number) => { setAnim(true); setPos(p); };
@@ -49,7 +54,38 @@ export function BannerCarousel({ banners, label = "기획전 배너" }: { banner
     <div role="region" aria-roledescription="carousel" aria-label={label} className="relative"
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
-      <div className="overflow-hidden rounded-2xl" style={{ aspectRatio: `${width} / ${height}` }}
+      <div className="overflow-hidden rounded-2xl md:cursor-grab" style={{ aspectRatio: `${width} / ${height}` }}
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse" || e.button !== 0 || n < 2) return;
+          drag.current = { id: e.pointerId, x: e.clientX, w: e.currentTarget.clientWidth, moved: false };
+        }}
+        onPointerMove={(e) => {
+          const d = drag.current;
+          if (!d || d.id !== e.pointerId) return;
+          const m = e.clientX - d.x;
+          if (!d.moved) {
+            if (Math.abs(m) < 5) return;
+            d.moved = true;
+            e.currentTarget.setPointerCapture(e.pointerId);
+            setAnim(false);
+          }
+          setDx(m);
+        }}
+        onPointerUp={(e) => {
+          const d = drag.current;
+          drag.current = null;
+          if (!d || !d.moved) return;
+          if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+          suppressClick.current = true;
+          window.setTimeout(() => { suppressClick.current = false; }, 0);
+          const m = e.clientX - d.x;
+          setDx(0);
+          if (Math.abs(m) > d.w * 0.15) (m < 0 ? next : prev)();
+          else setAnim(true);
+        }}
+        onPointerCancel={() => { drag.current = null; setDx(0); setAnim(true); }}
+        onClickCapture={(e) => { if (suppressClick.current) { suppressClick.current = false; e.preventDefault(); e.stopPropagation(); } }}
+        onDragStart={(e) => e.preventDefault()}
         onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
         onTouchEnd={(e) => {
           if (touchX.current === null) return;
@@ -58,14 +94,14 @@ export function BannerCarousel({ banners, label = "기획전 배너" }: { banner
           if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
         }}>
         <ul className={`flex h-full ${animate ? "transition-transform duration-500 ease-out" : ""}`}
-          style={{ transform: `translateX(-${pos * 100}%)` }}
+          style={{ transform: dx ? `translateX(calc(-${pos * 100}% + ${dx}px))` : `translateX(-${pos * 100}%)` }}
           onTransitionEnd={settle}>
           {loop.map((b, i) => {
             const hidden = i !== pos || (n > 1 && (i === 0 || i === n + 1));
             return (
               <li key={`${b.id}-${i}`} className="relative h-full w-full shrink-0" aria-hidden={hidden} inert={hidden}>
-                <Link href={b.href} className="block h-full focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white">
-                  <Image src={b.image} alt={b.title} fill sizes="(min-width:1280px) 1248px, 100vw" priority={i === 1} className="object-contain" />
+                <Link href={b.href} className="relative block h-full focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white">
+                  <Image src={b.image} alt={b.title} fill sizes="(min-width:1280px) 1248px, 100vw" priority={i === 1} draggable={false} className="object-contain" />
                 </Link>
               </li>
             );
