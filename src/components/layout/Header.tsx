@@ -42,7 +42,7 @@ export async function Header() {
         </Link>
         <div className="flex-1 md:hidden" />
         {/* Figma 788:999 search: 518×54, 흰 바탕, 2px #007827 테두리, 완전 둥근 모서리, 안쪽 그림자 */}
-        <form role="search" action="/search" className="relative mx-auto hidden min-w-0 flex-1 md:block lg:max-w-[520px] lg:group-data-[compact=true]:max-w-[400px]">
+        <form role="search" action="/search" className="relative mx-auto hidden min-w-0 flex-1 md:block">
           <label htmlFor="q" className="sr-only">상품 검색</label>
           <input id="q" name="q" type="search" placeholder="순무, 새우젓, 강화섬쌀…"
             className="h-[54px] w-full min-w-0 rounded-full border-2 border-[#007827] bg-white pl-6 pr-14 text-base text-stone-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.08)] outline-none placeholder:text-stone-500 focus-visible:ring-2 focus-visible:ring-[#007827]/30 group-data-[compact=true]:h-11" />
