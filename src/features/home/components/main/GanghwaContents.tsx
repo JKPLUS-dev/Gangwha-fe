@@ -1,3 +1,4 @@
+import { CONTAINER } from "@/components/ui/Container";
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
@@ -20,7 +21,7 @@ function Pill({ children }: { children: string }) {
 export function GanghwaContents({ videos, festivals, stories }: { videos: ContentCard[]; festivals: ContentCard[]; stories: ContentCard[] }) {
   return (
     <section aria-labelledby="gh-title" className="bg-white">
-      <div className="mx-auto max-w-[1000px] px-4 py-12 md:py-16">
+      <div className={`${CONTAINER} py-12 md:py-16`}>
         <MainTitle id="gh-title" title="강화도 콘텐츠" desc="강화도몰에서 콘텐츠를 즐겨보세요!" />
 
         <Pill>홍보·숏폼</Pill>

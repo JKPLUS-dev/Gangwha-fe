@@ -1,5 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getCategoryTabs } from "@/features/product/api";
+import { HamburgerMenu } from "./HamburgerMenu";
+import { StickyHeader } from "./StickyHeader";
+import { UserLink } from "./UserLink";
+import { MobileSearch } from "./MobileSearch";
 
 const NAV = [
   { label: "농산물", href: "/products?category=agri" },
@@ -18,29 +23,35 @@ const UTIL = [
   { label: "입점신청", href: "/seller/apply" },
 ];
 
-export function Header() {
+export async function Header() {
+  const categories = await getCategoryTabs();
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
-      <div className="hidden border-b border-stone-100 md:block">
+    <>
+      <div className="hidden border-b border-stone-100 bg-white md:block">
         <ul className="mx-auto flex max-w-7xl justify-end gap-5 px-4 py-2 text-sm text-stone-600">
           {UTIL.map((u) => <li key={u.label}><Link href={u.href} className="hover:text-stone-900">{u.label}</Link></li>)}
         </ul>
       </div>
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 md:gap-8 md:py-4">
+      <StickyHeader>
+      <div className="relative mx-auto flex max-w-7xl items-center gap-2 px-4 py-2 md:py-3 transition-[padding] md:gap-6 md:py-4 group-data-[compact=true]:py-2">
+        <HamburgerMenu categories={categories} />
         <Link href="/" className="inline-flex h-11 shrink-0 items-center md:h-14">
-          <Image src="/images/logo-full.png" alt="강화도몰" width={2083} height={755} priority sizes="160px" className="hidden h-14 w-auto md:block" />
+          <Image src="/images/logo-full.png" alt="강화도몰" width={2083} height={755} priority sizes="160px" className="hidden h-14 w-auto transition-[height] md:block group-data-[compact=true]:h-10" />
           <Image src="/images/logo-symbol.png" alt="강화도몰" width={755} height={755} priority sizes="44px" className="size-11 md:hidden" />
         </Link>
-        <form role="search" className="flex flex-1" action="/search">
+        <div className="flex-1 md:hidden" />
+        <form role="search" className="hidden min-w-0 flex-1 md:flex" action="/search">
           <label htmlFor="q" className="sr-only">상품 검색</label>
-          <input id="q" name="q" placeholder="순무, 새우젓, 강화섬쌀…" className="h-11 w-full rounded-l-lg border-2 border-r-0 border-brand px-4 text-base outline-none md:h-12" />
-          <button className="h-11 rounded-r-lg bg-brand px-5 font-semibold text-white md:h-12">검색</button>
+          <input id="q" name="q" placeholder="순무, 새우젓, 강화섬쌀…" className="h-11 w-full min-w-0 rounded-l-lg border-2 border-r-0 border-brand px-3 md:px-4 text-base outline-none md:h-12" />
+          <button className="h-11 shrink-0 rounded-r-lg bg-brand px-4 font-semibold md:px-5 text-white md:h-12">검색</button>
         </form>
         <nav aria-label="내 메뉴" className="hidden gap-4 text-sm md:flex">
-          <Link href="/wishlist" className="inline-flex h-11 items-center">찜</Link><Link href="/my" className="inline-flex h-11 items-center">마이</Link><Link href="/cart" className="inline-flex h-11 items-center">장바구니</Link>
+          <Link href="/wishlist" className="inline-flex h-11 items-center">찜</Link><Link href="/cart" className="inline-flex h-11 items-center">장바구니</Link>
         </nav>
+        <MobileSearch />
+        <UserLink />
       </div>
-      <nav aria-label="카테고리" className="mx-auto max-w-7xl overflow-x-auto px-4">
+      <nav aria-label="카테고리" className="mx-auto max-w-7xl overflow-x-auto scroll-subtle px-4 group-data-[compact=true]:hidden">
         <ul className="flex gap-1 whitespace-nowrap">
           {NAV.map((n, i) => (
             <li key={n.label}>
@@ -49,6 +60,7 @@ export function Header() {
           ))}
         </ul>
       </nav>
-    </header>
+      </StickyHeader>
+    </>
   );
 }

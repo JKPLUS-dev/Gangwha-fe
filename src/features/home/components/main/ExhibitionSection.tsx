@@ -1,3 +1,4 @@
+import { CONTAINER } from "@/components/ui/Container";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -10,7 +11,7 @@ export function ExhibitionSection({ items, children }: { items: Exhibition[]; ch
   return (
     <section aria-labelledby="exh-title" className="relative overflow-hidden bg-[#f6ebdb]">
       <Image src="/images/exhibition-clock.png" alt="" aria-hidden width={583} height={533} className="pointer-events-none absolute right-0 top-0 hidden w-[40%] max-w-[583px] md:block" />
-      <div className="relative mx-auto max-w-[1286px] px-4 py-12 md:py-16">
+      <div className={`${CONTAINER} relative py-12 md:py-16`}>
         <h2 id="exh-title" className="text-3xl font-bold text-[#262626] md:text-[56px] md:leading-tight">
           놓치면 후회하는 <span className="text-[#d42222]">기획전</span>
         </h2>

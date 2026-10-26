@@ -14,7 +14,7 @@ export function SignatureItems() {
   return (
     <section aria-labelledby="sig-title" className="mx-auto w-full max-w-7xl px-4 pt-12">
       <h2 id="sig-title" className="mb-5 text-xl font-bold text-stone-900 md:text-2xl">강화 대표 특산품</h2>
-      <ul className="flex gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-6 md:overflow-visible">
+      <ul className="flex gap-4 overflow-x-auto scroll-subtle pb-2 md:grid md:grid-cols-6 md:overflow-visible">
         {ITEMS.map((item) => (
           <li key={item.label} className="shrink-0">
             <Link href={`/products?q=${encodeURIComponent(item.q)}`} className="group flex flex-col items-center gap-2">

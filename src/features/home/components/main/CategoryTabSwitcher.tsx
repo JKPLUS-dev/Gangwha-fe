@@ -10,7 +10,7 @@ export function CategoryTabSwitcher({ tabs }: { tabs: CategoryTabItem[] }) {
   const id = useId();
   return (
     <>
-      <div role="tablist" aria-label="카테고리" className="flex gap-2 overflow-x-auto rounded-t-2xl bg-[#f6ebdb] px-4 py-4 md:justify-between md:gap-0 md:px-6">
+      <div role="tablist" aria-label="카테고리" className="flex gap-2 overflow-x-auto scroll-subtle rounded-t-2xl bg-[#f6ebdb] px-4 py-4 md:justify-between md:gap-0 md:px-6">
         {tabs.map((t, i) => {
           const on = active === i;
           return (

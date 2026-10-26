@@ -18,10 +18,10 @@ export function ScrollRow({ children, className = "" }: { children: ReactNode; c
   return (
     <div className="relative">
       <ol ref={ref} onScroll={update} onPointerEnter={update} className={className}>{children}</ol>
-      <button type="button" aria-label="이전 상품" onClick={() => move(-1)} disabled={edge.start} className={`${btn} -left-10 ${edge.start ? "invisible" : ""}`}>
+      <button type="button" aria-label="이전 상품" onClick={() => move(-1)} disabled={edge.start} className={`${btn} left-1 ${edge.start ? "invisible" : ""}`}>
         <img src="/images/main/arrow-right.svg" alt="" width={71} height={51} className="-scale-x-100" />
       </button>
-      <button type="button" aria-label="다음 상품" onClick={() => move(1)} disabled={edge.end} className={`${btn} -right-10 ${edge.end ? "invisible" : ""}`}>
+      <button type="button" aria-label="다음 상품" onClick={() => move(1)} disabled={edge.end} className={`${btn} right-1 ${edge.end ? "invisible" : ""}`}>
         <img src="/images/main/arrow-right.svg" alt="" width={71} height={51} />
       </button>
     </div>

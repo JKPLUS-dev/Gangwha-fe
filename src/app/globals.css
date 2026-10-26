@@ -13,3 +13,27 @@ body {
   font-size: 16px;
   word-break: keep-all;
 }
+
+/* 가로 스크롤 공용: 스크롤바 자리는 6px 항상 확보(높이 변화 없음), 평소엔 투명, hover/focus-within 때만 보여요. 터치 기기는 항상 숨김. */
+.scroll-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.scroll-subtle::-webkit-scrollbar { height: 6px; }
+.scroll-subtle::-webkit-scrollbar-track { background: transparent; }
+.scroll-subtle::-webkit-scrollbar-thumb { background: transparent; border-radius: 9999px; }
+@media (hover: hover) {
+  .scroll-subtle:hover,
+  .scroll-subtle:focus-within { scrollbar-color: var(--color-stone-400) transparent; }
+  .scroll-subtle:hover::-webkit-scrollbar-thumb,
+  .scroll-subtle:focus-within::-webkit-scrollbar-thumb { background: var(--color-stone-400); }
+}
+@media (hover: none) {
+  .scroll-subtle { scrollbar-width: none; }
+  .scroll-subtle::-webkit-scrollbar { display: none; }
+}
+
+/* 햄버거 서랍: 왼쪽에서 밀려 들어와요. 움직임 줄이기 설정이면 생략. */
+@keyframes drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+dialog.drawer-left[open] { animation: drawer-in 0.22s ease-out; }
+@media (prefers-reduced-motion: reduce) { dialog.drawer-left[open] { animation: none; } }

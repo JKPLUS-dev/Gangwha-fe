@@ -1,3 +1,4 @@
+import { CONTAINER } from "@/components/ui/Container";
 import Link from "next/link";
 import type { Notice } from "@/features/support/data";
 
@@ -5,7 +6,7 @@ import type { Notice } from "@/features/support/data";
 export function HelpAndNotice({ notices }: { notices: Notice[] }) {
   return (
     <section aria-label="고객센터와 공지사항" className="bg-white">
-      <div className="mx-auto grid max-w-[1000px] gap-6 px-4 py-12 md:grid-cols-2 md:py-16">
+      <div className={`${CONTAINER} grid gap-6 py-12 md:grid-cols-2 md:py-16`}>
         <div className="rounded-2xl bg-[#ffe9a8] p-6">
           <h2 className="text-xl font-bold text-[#353535]">대표 전화안내</h2>
           <p className="mt-2 text-3xl font-extrabold text-[#9a3412]">1644-3777</p>

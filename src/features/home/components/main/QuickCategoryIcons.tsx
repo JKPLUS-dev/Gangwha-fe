@@ -1,3 +1,4 @@
+import { CONTAINER } from "@/components/ui/Container";
 import Link from "next/link";
 import type { QuickCategory } from "@/features/content/data";
 
@@ -16,7 +17,7 @@ export const QUICK_ICONS = [
 export function QuickCategoryIcons({ items }: { items: QuickCategory[] }) {
   return (
     <nav aria-label="바로가기 카테고리" className="bg-white">
-      <ul className="mx-auto grid max-w-[1000px] grid-cols-4 gap-y-6 px-4 py-8 md:grid-cols-8 md:py-10">
+      <ul className={`${CONTAINER} grid grid-cols-4 gap-y-6 py-8 md:grid-cols-8 md:py-10`}>
         {items.slice(0, 8).map((c, i) => {
           const ic = QUICK_ICONS[i % QUICK_ICONS.length];
           return (
