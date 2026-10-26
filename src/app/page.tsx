@@ -20,7 +20,7 @@ export default async function HomePage() {
     getQuickCategories(), getExhibitions(), getPromoVideos(), getFestivals(), getProducerStories(),
     getProducts({ category: "agri", sort: "new" }), getTimeDeals(4), getFeaturedSellers(), getNotices(),
   ]);
-  const tabs = await Promise.all(TAB_ORDER.map(async (c) => ({ label: CATEGORIES[c], products: await getProducts({ category: c }) })));
+  const tabs = await Promise.all(TAB_ORDER.map(async (c) => ({ key: c, label: CATEGORIES[c], products: await getProducts({ category: c, sort: "best" }) })));
 
   return (
     <>

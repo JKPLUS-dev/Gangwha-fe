@@ -3,6 +3,7 @@ import { PRODUCTS, REVIEWS } from "./data/products";
 import { SELLERS } from "./data/sellers";
 import { DEAL_ENDS_AT, GIFT_SET_KEYWORDS, INTERVIEWS } from "./data/promotions";
 import type { Category, Product } from "./types";
+import { QUICK_CATEGORIES, type QuickCategory } from "../content/data";
 
 export type ProductSort = "best" | "new" | "priceAsc" | "priceDesc";
 
@@ -67,6 +68,40 @@ export async function getFeaturedSellers() {
 
 export async function getFeaturedSeller() {
   return (await getFeaturedSellers())[0] ?? null;
+}
+
+// 메인 "카테고리별 상품" 탭: 원형 아이콘(QUICK_CATEGORIES)과 같은 8개예요.
+const QUICK_MATCHERS: Record<string, (p: Product) => boolean> = {
+  ginseng: (p) => /인삼|수삼|홍삼/.test(p.name),
+  sunmu: (p) => /순무/.test(p.name),
+  ssuk: (p) => /쑥/.test(p.name),
+  eel: (p) => /장어/.test(p.name),
+  rice: (p) => /쌀|누룽지/.test(p.name),
+  jeotgal: (p) => /젓/.test(p.name),
+  seafood: (p) => p.category === "seafood" && !/젓|장어/.test(p.name),
+  craft: (p) => /화문석|왕골/.test(p.name),
+};
+const QUICK_IMAGES: Record<string, string> = {
+  ginseng: "/images/ginseng.webp",
+  sunmu: "/images/sunmu.webp",
+  ssuk: "/images/paddy.webp",
+  eel: "/images/fish.webp",
+  rice: "/images/rice.webp",
+  jeotgal: "/images/shrimp.webp",
+  seafood: "/images/fish.webp",
+  craft: "/images/scenery.webp",
+};
+
+export type CategoryTab = QuickCategory & { image: string };
+
+export async function getCategoryTabs(): Promise<CategoryTab[]> {
+  return QUICK_CATEGORIES.map((c) => ({ ...c, image: QUICK_IMAGES[c.slug] }));
+}
+
+export async function getProductsByQuickCategory(slug: string, limit = 8): Promise<Product[]> {
+  const match = QUICK_MATCHERS[slug];
+  if (!match) return [];
+  return PRODUCTS.filter((p) => match(p) && !p.soldOut).sort(SORTERS.best).slice(0, limit);
 }
 
 export { finalPrice };
