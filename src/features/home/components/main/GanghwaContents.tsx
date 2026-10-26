@@ -59,7 +59,7 @@ export function GanghwaContents({ videos, festivals, stories }: { videos: Conten
           <Pill>지역 생산자 이야기</Pill>
           <Link href="/search" className="absolute right-0 top-0 inline-flex h-11 items-center text-sm font-medium text-[#454545] hover:underline md:top-1 md:h-9 md:rounded-md md:border md:border-[#d6d6d6] md:px-3 md:hover:no-underline md:hover:bg-[#f4f4f4]">더보기 &gt;</Link>
         </div>
-        <ul className="mx-auto grid max-w-[1000px] grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-[13px]">
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-[13px]">
           {stories.map((s, i) => (
             <li key={s.id} className="group flex flex-col overflow-hidden rounded-[20px] bg-[#f4f4f4] ring-1 ring-black/[0.04] transition-colors duration-300 hover:bg-[#eeeeee]">
               <div className="relative aspect-[323/258] overflow-hidden">

@@ -47,7 +47,7 @@ export function CategoryTabs({ tabs }: { tabs: CategoryTabData[] }) {
     <section aria-labelledby="cat-title" className="bg-white">
       <div className={`${CONTAINER} py-12 md:py-16`}>
         <MainTitle id="cat-title" title="카테고리별 상품" desc="카테고리별로 상품을 즐기세요!" />
-        <div className="mx-auto max-w-[1044px] rounded-[16px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+        <div className="rounded-[16px] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
           <CategoryTabSwitcher tabs={tabs.map((t, ti) => ({
             key: t.slug,
             label: t.label,
