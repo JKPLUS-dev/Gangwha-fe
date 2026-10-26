@@ -64,10 +64,10 @@ export async function ACard({ product }: { product: Product }) {
   const sale = product.salePrice;
   const rate = sale ? Math.round((1 - sale / product.price) * 100) : 0;
   return (
-    <Link href={`/products/${product.id}`} className="group block h-full overflow-hidden rounded-3xl bg-white shadow-[0_2px_12px_rgba(47,93,58,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(47,93,58,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2f5d3a]">
+    <Link href={`/products/${product.id}`} className="group block h-full overflow-hidden rounded-2xl bg-white shadow-[0_2px_12px_rgba(47,93,58,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_10px_28px_rgba(47,93,58,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2f5d3a]">
       <div className="relative aspect-[4/5] overflow-hidden bg-[#f6ebdb]">
         <div className={`absolute inset-0 ${product.soldOut && product.image ? "opacity-60" : ""}`}>
-          <ProductImage product={product} sizes="(min-width: 1024px) 25vw, 50vw" />
+          <ProductImage product={product} sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, 50vw" />
         </div>
         {rate > 0 && <span className="absolute left-3 top-3 rounded-full bg-[#c2410c] px-2.5 py-1 text-xs font-bold text-white">{rate}%</span>}
         {product.soldOut && <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 bg-stone-900/80 py-2 text-center font-bold text-white">품절</span>}
@@ -76,7 +76,7 @@ export async function ACard({ product }: { product: Product }) {
         <p className="text-sm text-stone-600">{seller?.area}</p>
         <h3 className="mt-1 line-clamp-2 min-h-12 text-base font-semibold text-stone-900">{product.name}</h3>
         <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5">
-          <span className="text-lg font-bold text-stone-900">{formatPrice(sale ?? product.price)}</span>
+          <span className="text-base font-bold text-stone-900">{formatPrice(sale ?? product.price)}</span>
           {rate > 0 && <s className="text-sm text-stone-600">{formatPrice(product.price)}</s>}
         </p>
         {product.freeShipping && <p className="mt-1 text-sm font-medium text-[#1d5f8a]">무료배송</p>}
@@ -88,7 +88,7 @@ export async function ACard({ product }: { product: Product }) {
 export function AGrid({ products, empty = "곧 들어올 예정이에요." }: { products: Product[]; empty?: string }) {
   if (!products.length) return <p className="rounded-3xl bg-white py-12 text-center text-stone-600">{empty}</p>;
   return (
-    <ul className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
+    <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5">
       {products.map((p) => <li key={p.id}><ACard product={p} /></li>)}
     </ul>
   );

@@ -97,7 +97,7 @@ export async function ATimeDeals() {
           </div>
           <p className="inline-flex h-11 items-center gap-2 rounded-full bg-[#c2410c] px-5 font-bold text-white">남은 시간 <Countdown endsAt={endsAt} /></p>
         </div>
-        <AGrid products={pickVaried(deals, 4)} />
+        <AGrid products={pickVaried(deals, 5)} />
       </div>
     </section>
   );
@@ -135,7 +135,7 @@ export async function ABest() {
   const lists = await Promise.all(keys.map((category) => getProducts({ category, sort: "best" })));
   return (
     <SectionA id="a-best" title="BEST" sub="가장 많이 찾는 강화 특산품" moreHref="/products?sort=best">
-      <Tabs label="BEST 분류" tabs={keys.map((k, i) => ({ label: k ? CATEGORIES[k] : "전체", panel: <AGrid products={pickVaried(lists[i], 4)} /> }))} />
+      <Tabs label="BEST 분류" tabs={keys.map((k, i) => ({ label: k ? CATEGORIES[k] : "전체", panel: <AGrid products={pickVaried(lists[i], 5)} /> }))} />
     </SectionA>
   );
 }
@@ -156,7 +156,7 @@ export function ABanner() {
 // 8. 제철
 export async function ASeasonal() {
   const [kimchi, jeot] = await Promise.all([getProducts({ q: "순무" }), getProducts({ q: "젓" })]);
-  const picks = [...kimchi.slice(0, 2), ...jeot.slice(0, 2)];
+  const picks = [...kimchi.slice(0, 3), ...jeot.slice(0, 3)];
   return (
     <SectionA id="a-season" title="지금 강화는 순무·새우젓 제철" sub="알싸한 순무와 가을 추젓으로 김장 준비" tone="green">
       <div className="grid gap-6 lg:grid-cols-5">
@@ -164,7 +164,7 @@ export async function ASeasonal() {
           <APhoto src="/images/sunmu.webp" alt="강화 순무김치" className="aspect-[4/3] min-h-72 lg:aspect-auto lg:h-full" sizes="(min-width:1024px) 40vw, 100vw" />
           <span className={`${btnWhite} absolute bottom-6 left-6`}>제철 상품 보기</span>
         </Link>
-        <ul className="grid grid-cols-2 gap-4 md:gap-6 lg:col-span-3">{picks.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
+        <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:col-span-3">{picks.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
       </div>
     </SectionA>
   );
@@ -172,17 +172,17 @@ export async function ASeasonal() {
 
 // 9. 신상품
 export async function ANew() {
-  const products = pickVaried((await getProducts({ sort: "new" })).filter((p) => p.image && !p.soldOut), 8);
+  const products = pickVaried((await getProducts({ sort: "new" })).filter((p) => p.image && !p.soldOut), 10);
   return <SectionA id="a-new" title="이번 주 신상품" sub="새로 들어온 강화 특산품" moreHref="/products?sort=new" tone="white" deco="wave"><AGrid products={products} /></SectionA>;
 }
 
 // 10. 선물세트
 export async function AGift() {
-  const sets = pickVaried(await getGiftSets(16), 3);
+  const sets = pickVaried(await getGiftSets(16), 5);
   if (!sets.length) return null;
   return (
     <SectionA id="a-gift" title="강화 선물세트관" sub="인삼, 섬쌀, 젓갈을 선물 포장해 보내드려요" moreHref="/products?q=%EC%84%B8%ED%8A%B8">
-      <ul className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-3">{sets.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
+      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5">{sets.map((p) => <li key={p.id}><ACard product={p} /></li>)}</ul>
     </SectionA>
   );
 }
@@ -317,7 +317,7 @@ export async function ARegion() {
   const areaOf = new Map(sellers.map((s) => [s.id, s.area]));
   return (
     <SectionA id="a-region" title="산지에서 고르기" sub="13개 읍·면" tone="white" deco="wave">
-      <Tabs label="강화 읍·면" variant="chip" tabs={REGIONS.map((r) => ({ label: r, panel: <AGrid products={pickVaried(products.filter((p) => areaOf.get(p.sellerId) === r), 4)} empty={`${r} 상품은 곧 입점 예정이에요.`} /> }))} />
+      <Tabs label="강화 읍·면" variant="chip" tabs={REGIONS.map((r) => ({ label: r, panel: <AGrid products={pickVaried(products.filter((p) => areaOf.get(p.sellerId) === r), 5)} empty={`${r} 상품은 곧 입점 예정이에요.`} /> }))} />
     </SectionA>
   );
 }
