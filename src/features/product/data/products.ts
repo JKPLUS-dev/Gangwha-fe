@@ -77,7 +77,7 @@ const GENERATED_SEEDS: Seed[] = SELLERS.slice(6).flatMap((seller, i) =>
   }),
 );
 
-// 목업 사진: 상품명 키워드로 /public/images 사진을 연결해요. 출처는 public/images/CREDITS.md
+// 목업 사진: 키워드 매칭 + 인접 상품이 같은 사진을 쓰지 않게 풀에서 분산. 출처 public/images/CREDITS.md
 const IMAGE_BY_KEYWORD: [RegExp, string][] = [
   [/홍삼/, "/images/redginseng.webp"],
   [/인삼|수삼/, "/images/ginseng.webp"],
@@ -87,15 +87,77 @@ const IMAGE_BY_KEYWORD: [RegExp, string][] = [
   [/김치|깍두기/, "/images/sunmu.webp"],
   [/순무/, "/images/radish.webp"],
   [/밴댕이|낙지|장어/, "/images/fish.webp"],
+  [/화문석|왕골/, "/images/scenery.webp"],
+  [/약쑥|쑥/, "/images/paddy.webp"],
+];
+const IMAGE_POOL = [
+  "/images/rice.webp",
+  "/images/ginseng.webp",
+  "/images/redginseng.webp",
+  "/images/shrimp.webp",
+  "/images/radish.webp",
+  "/images/sunmu.webp",
+  "/images/fish.webp",
+  "/images/paddy.webp",
+  "/images/scenery.webp",
+  "/images/scenery2.webp",
 ];
 const imageFor = (name: string) => IMAGE_BY_KEYWORD.find(([re]) => re.test(name))?.[1];
+
+function spreadImages(names: string[]): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < names.length; i++) {
+    let img = imageFor(names[i]) ?? IMAGE_POOL[i % IMAGE_POOL.length];
+    const prev = out[i - 1];
+    const prev2 = out[i - 2];
+    if (img === prev || img === prev2) {
+      img =
+        IMAGE_POOL.find((p) => p !== prev && p !== prev2 && p !== img) ??
+        IMAGE_POOL.find((p) => p !== prev) ??
+        IMAGE_POOL[(i + 3) % IMAGE_POOL.length];
+    }
+    out.push(img);
+  }
+  return out;
+}
 
 // 상세 설명 이미지: 판매자 이미지가 들어오기 전까지 샘플 한 장으로 통일해요.
 const DETAIL_IMAGE = { src: "/images/detail-sample.jpg", width: 500, height: 5680 };
 
-export const PRODUCTS: Product[] = [...SEEDS, ...GENERATED_SEEDS].map((seed, i) => ({
+// 메인 "지역행사 티켓" 탭용 목데이터(체험·입장권). 서버가 생기면 실제 상품으로 바뀌어요.
+const TICKET_SEEDS: Seed[] = [
+  { id: "t1", sellerId: "s5", name: "강화 고려산 진달래축제 체험권", category: "craft", price: 15000, salePrice: 12000, origin: "인천 강화군 하점면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t2", sellerId: "s2", name: "강화 인삼축제 수확 체험 티켓", category: "craft", price: 20000, origin: "인천 강화군 송해면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t3", sellerId: "s3", name: "외포항 새우젓축제 입장권 + 시식", category: "craft", price: 10000, origin: "인천 강화군 내가면 (외포항)", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t4", sellerId: "s6", name: "강화 갯벌 체험 가족 티켓 (4인)", category: "craft", price: 48000, salePrice: 39000, origin: "인천 강화군 화도면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t5", sellerId: "s5", name: "화문석 만들기 원데이 클래스", category: "craft", price: 35000, origin: "인천 강화군 양사면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t6", sellerId: "s4", name: "강화 순무 김장 체험 티켓", category: "craft", price: 25000, origin: "인천 강화군 화도면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t7", sellerId: "s1", name: "교동 대룡시장 투어 + 강화섬쌀 체험", category: "craft", price: 18000, origin: "인천 강화군 교동면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t8", sellerId: "s6", name: "강화 개천대축제 마니산 트레킹 티켓", category: "craft", price: 12000, origin: "인천 강화군 화도면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t9", sellerId: "s1", name: "교동도 한옥 스테이 1박 (2인)", category: "craft", price: 160000, salePrice: 139000, origin: "인천 강화군 교동면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t10", sellerId: "s6", name: "동막해변 오션뷰 펜션 1박", category: "craft", price: 180000, origin: "인천 강화군 화도면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t11", sellerId: "s4", name: "강화 농촌 체험 캠핑 1박 (4인)", category: "craft", price: 120000, origin: "인천 강화군 화도면", storage: "room", shipDays: 0, freeShipping: true },
+  { id: "t12", sellerId: "s2", name: "인삼밭 팜스테이 1박 + 수확 체험", category: "craft", price: 140000, origin: "인천 강화군 송해면", storage: "room", shipDays: 0, freeShipping: true },
+];
+
+// 메인 "전통주" 탭용 목데이터.
+const LIQUOR_SEEDS: Seed[] = [
+  { id: "l1", sellerId: "s2", name: "강화 인삼 막걸리 750ml 6병", category: "processed", price: 24000, origin: "인천 강화군 송해면", storage: "chilled", shipDays: 1, freeShipping: false },
+  { id: "l2", sellerId: "s1", name: "강화섬쌀 생막걸리 750ml 6병", category: "processed", price: 21000, salePrice: 18900, origin: "인천 강화군 교동면", storage: "chilled", shipDays: 1, freeShipping: false },
+  { id: "l3", sellerId: "s2", name: "강화 인삼주 375ml", category: "processed", price: 32000, origin: "인천 강화군 송해면", storage: "room", shipDays: 2, freeShipping: true },
+  { id: "l4", sellerId: "s4", name: "순무 약주 500ml", category: "processed", price: 18000, origin: "인천 강화군 화도면", storage: "room", shipDays: 2, freeShipping: false },
+  { id: "l5", sellerId: "s1", name: "교동 쌀 청주 700ml", category: "processed", price: 28000, origin: "인천 강화군 교동면", storage: "room", shipDays: 2, freeShipping: true },
+  { id: "l6", sellerId: "s2", name: "강화 약쑥 동동주 750ml 4병", category: "processed", price: 19000, origin: "인천 강화군 불은면", storage: "chilled", shipDays: 1, freeShipping: false },
+  { id: "l7", sellerId: "s1", name: "강화 전통주 3종 선물세트", category: "processed", price: 59000, salePrice: 52000, origin: "인천 강화군", storage: "room", shipDays: 2, freeShipping: true },
+  { id: "l8", sellerId: "s4", name: "강화 증류소주 25도 375ml", category: "processed", price: 26000, origin: "인천 강화군 화도면", storage: "room", shipDays: 2, freeShipping: true },
+];
+
+const ALL_SEEDS = [...SEEDS, ...GENERATED_SEEDS, ...TICKET_SEEDS, ...LIQUOR_SEEDS];
+const PRODUCT_IMAGES = spreadImages(ALL_SEEDS.map((s) => s.name));
+
+export const PRODUCTS: Product[] = ALL_SEEDS.map((seed, i) => ({
   soldOut: false,
-  image: imageFor(seed.name),
+  image: PRODUCT_IMAGES[i],
   detailImage: DETAIL_IMAGE,
   ...seed,
   rating: 4 + ((i * 7) % 10) / 10,

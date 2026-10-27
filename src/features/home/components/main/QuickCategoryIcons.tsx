@@ -14,24 +14,31 @@ export const QUICK_ICONS = [
   { ring: null, icon: "/images/main/ic-gift.svg" },
 ];
 
-export function QuickCategoryIcons({ items }: { items: QuickCategory[] }) {
+// 피그마 799:410 메인 바로가기 7개: 색 원 + 흰 라인 아이콘 + 라벨
+const MAIN_QUICK = [
+  { label: "인기 상품", href: "/search?sort=best", bg: "#ff0000", icon: "/images/main/ic-fire.svg" },
+  { label: "강화 특산물", href: "/search?q=" + encodeURIComponent("강화"), bg: "#ffd400", icon: "/images/main/ic-ticket.svg" },
+  { label: "수산물·축산물", href: "/search?q=" + encodeURIComponent("수산"), bg: "#00d0ff", icon: "/images/main/ic-shrimp.svg" },
+  { label: "기획전", href: "/#exh-title", bg: "#ff0084", icon: "/images/main/ic-calendar.svg" },
+  { label: "농부 상점", href: "/sellers", bg: "#636363", icon: "/images/main/ic-cloud.svg" },
+  { label: "축제·행사", href: "/search?q=" + encodeURIComponent("축제"), bg: "#0800ff", icon: "/images/main/ic-party.svg" },
+  { label: "쿠폰·혜택", href: "/search?q=" + encodeURIComponent("쿠폰"), bg: "#00c000", icon: "/images/main/ic-discount.svg" },
+];
+
+export function QuickCategoryIcons(_: { items?: QuickCategory[] }) {
   return (
-    <nav aria-label="바로가기 카테고리" className="bg-white">
-      <ul className={`${CONTAINER} grid grid-cols-4 gap-y-6 py-8 md:grid-cols-8 md:py-10`}>
-        {items.slice(0, 8).map((c, i) => {
-          const ic = QUICK_ICONS[i % QUICK_ICONS.length];
-          return (
-            <li key={c.slug}>
-              <Link href={`/search?q=${encodeURIComponent(c.q)}`} className="group flex min-h-11 flex-col items-center gap-2 rounded-xl text-center focus-visible:outline-2 focus-visible:outline-brand">
-                <span className="relative grid size-16 place-items-center rounded-full bg-[#FF9700] transition group-hover:scale-105 md:size-[78px]">
-                  {ic.ring && <img src={ic.ring} alt="" width={78} height={78} className="absolute inset-0 size-full" />}
-                  <img src={ic.icon} alt="" width={56} height={56} className="relative size-10 md:size-[52px]" />
-                </span>
-                <span className="text-sm font-semibold text-[#474747] md:text-[15px]">{c.label}</span>
-              </Link>
-            </li>
-          );
-        })}
+    <nav aria-label="바로가기 메뉴" className="bg-white">
+      <ul className={`${CONTAINER} grid grid-cols-4 gap-y-6 py-8 md:grid-cols-7 md:py-10`}>
+        {MAIN_QUICK.map((c) => (
+          <li key={c.label}>
+            <Link href={c.href} className="group flex min-h-11 flex-col items-center gap-3 rounded-xl text-center focus-visible:outline-2 focus-visible:outline-brand">
+              <span className="grid size-16 place-items-center rounded-full transition group-hover:scale-105 md:size-[78px]" style={{ backgroundColor: c.bg }}>
+                <img src={c.icon} alt="" width={56} height={56} className="size-9 md:size-11" />
+              </span>
+              <span className="text-sm font-medium text-[#222222] md:text-[15px]">{c.label}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

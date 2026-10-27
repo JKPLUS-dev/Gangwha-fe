@@ -3,7 +3,7 @@ import {
   AReviews, ARegion, ASeasonal, ASellerCta, AShipping, ASignature, AStories, ATidal, ATimeDeals, ATrust,
 } from "@/features/home-a/sections";
 
-/** /a 리뉴얼: 쑥·황토·아이보리 팔레트 + 세리프 제목 */
+/** /a 리뉴얼 — Kurly / 29CM 톤 */
 export default function HomeAPage() {
   return (
     <>

@@ -10,26 +10,21 @@ import { REVIEWS, PRODUCTS } from "@/features/product/data/products";
 import { CATEGORIES, type Category } from "@/features/product/types";
 import { getNotices } from "@/features/support/data";
 import { pickVaried } from "@/features/home/pickVaried";
+import { formatPrice } from "@/features/product/format";
 import { QUICK_ICONS } from "@/features/home/components/main/QuickCategoryIcons";
-import { ACard, AGrid, APhoto, Leaf, SectionA, Wave } from "./ui";
+import { ACard, AGrid, APhoto, SectionA } from "./ui";
 
-const btnSsuk =
-  "inline-flex h-12 min-h-11 items-center justify-center rounded-full bg-[var(--a-ssuk)] px-7 text-[15px] font-bold text-white transition hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--a-ssuk)]";
-const btnWhite =
-  "inline-flex h-12 min-h-11 items-center justify-center rounded-full bg-white px-7 text-[15px] font-bold text-[var(--a-ssuk)] transition hover:bg-[var(--a-ssuk-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
-
-/** 1. 히어로 */
+/** 1. 히어로 — 사진이 주인공, 세리프 제목만 */
 export function AHero() {
   return (
-    <section className="bg-[var(--a-ivory)] pt-3 md:pt-6">
+    <section className="bg-white pt-3 md:pt-5">
       <div className={CONTAINER}>
-        <div className="relative isolate flex aspect-[4/5] items-end overflow-hidden rounded-[var(--a-radius)] sm:aspect-[16/9] md:aspect-[21/9] md:rounded-2xl">
+        <div className="relative isolate flex aspect-[4/5] items-end overflow-hidden sm:aspect-[16/9] md:aspect-[21/9]">
           <Image src="/images/paddy.webp" alt="마니산 아래 강화 들녘" fill priority sizes="(min-width:1280px) 1248px, 100vw" className="-z-10 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
-          <div className="p-6 md:p-12">
-            <p className="text-[12px] font-semibold tracking-[0.08em] text-white/85 md:text-[13px]">GANGHWA · 강화도몰</p>
-            <h1 className="a-hero-title mt-2 !text-white">강화 들녘에서 오늘, 우리 집 식탁으로</h1>
-            <Link href="/products" className={`${btnWhite} mt-6`}>강화 특산품 보기</Link>
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+          <div className="p-5 md:p-10">
+            <h1 className="a-hero-title">강화 들녘에서 오늘, 우리 집 식탁으로</h1>
+            <Link href="/products" className="a-btn-ghost mt-5">특산품 보러가기 →</Link>
           </div>
         </div>
       </div>
@@ -37,22 +32,24 @@ export function AHero() {
   );
 }
 
-/** 2. 원형 아이콘 */
+/** 2. 바로가기 — 원형 장식 제거, 정사각 아이콘 */
 export async function AQuick() {
   const items = await getQuickCategories();
   return (
-    <nav aria-label="바로가기 카테고리" className="bg-[var(--a-ivory)]">
-      <ul className={`${CONTAINER} grid grid-cols-4 gap-y-6 py-10 md:grid-cols-8 md:py-12`}>
+    <nav aria-label="바로가기 카테고리" className="a-section-border bg-white">
+      <ul className={`${CONTAINER} grid grid-cols-4 gap-x-2 gap-y-5 py-8 md:grid-cols-8 md:py-10`}>
         {items.slice(0, 8).map((c, i) => {
           const ic = QUICK_ICONS[i % QUICK_ICONS.length];
           return (
             <li key={c.slug}>
-              <Link href={`/search?q=${encodeURIComponent(c.q)}`} className="group flex min-h-11 flex-col items-center gap-2 rounded-[var(--a-radius)] focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]">
-                <span className="relative grid size-16 place-items-center rounded-full bg-[var(--a-hwangto)] shadow-[0_4px_12px_rgba(63,107,79,0.12)] transition group-hover:-translate-y-1 md:size-[72px]">
-                  {ic.ring && <img src={ic.ring} alt="" width={78} height={78} className="absolute inset-0 size-full" />}
-                  <img src={ic.icon} alt="" width={56} height={56} className="relative size-9 md:size-11" />
+              <Link
+                href={`/search?q=${encodeURIComponent(c.q)}`}
+                className="flex min-h-11 flex-col items-center gap-2 focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]"
+              >
+                <span className="relative grid size-14 place-items-center overflow-hidden rounded-[4px] bg-[#f3f3f3] md:size-16">
+                  <img src={ic.icon} alt="" width={56} height={56} className="relative size-9 md:size-10" />
                 </span>
-                <span className="text-[12px] font-semibold text-[var(--a-text)] md:text-[13px]">{c.label}</span>
+                <span className="text-[12px] font-medium text-[var(--a-text)] md:text-[13px]">{c.label}</span>
               </Link>
             </li>
           );
@@ -62,7 +59,7 @@ export async function AQuick() {
   );
 }
 
-/** 3. 약속 띠 */
+/** 3. 약속 — 카드/원형 번호 제거, 헤어라인 구분 */
 const TRUST = [
   { title: "강화 생산자 직접 입점", desc: "13개 읍·면 150곳" },
   { title: "산지에서 바로 출고", desc: "주문 후 1~2일 안에" },
@@ -71,20 +68,15 @@ const TRUST = [
 ];
 export function ATrust() {
   return (
-    <section aria-label="강화도몰 약속" className="bg-[var(--a-ivory)] pb-2">
-      <ul className={`${CONTAINER} grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5`}>
+    <section aria-label="강화도몰 약속" className="a-section-border bg-white">
+      <ul className={`${CONTAINER} grid grid-cols-2 md:grid-cols-4`}>
         {TRUST.map((t, i) => (
-          <li key={t.title} className="a-card flex items-start gap-3 p-4">
-            <span
-              aria-hidden
-              className={`grid size-9 shrink-0 place-items-center rounded-full text-[13px] font-bold text-white ${i % 2 === 0 ? "bg-[var(--a-ssuk)]" : "bg-[var(--a-hwangto)]"}`}
-            >
-              {i + 1}
-            </span>
-            <div>
-              <p className="text-[14px] font-semibold text-[var(--a-text)] md:text-[15px]">{t.title}</p>
-              <p className="a-caption mt-0.5">{t.desc}</p>
-            </div>
+          <li
+            key={t.title}
+            className={`flex min-h-11 flex-col justify-center py-5 ${i > 0 ? "md:border-l md:border-[var(--a-line)] md:pl-6" : ""} ${i % 2 === 1 ? "pl-4 md:pl-6" : ""}`}
+          >
+            <p className="text-[13px] font-bold text-[var(--a-text)] md:text-[14px]">{t.title}</p>
+            <p className="mt-0.5 text-[12px] text-[var(--a-secondary)]">{t.desc}</p>
           </li>
         ))}
       </ul>
@@ -98,22 +90,13 @@ export async function ATimeDeals() {
   const endsAt = deals[0]?.dealEndsAt;
   if (!deals.length || !endsAt) return null;
   return (
-    <section aria-labelledby="a-deal" className="relative overflow-hidden bg-white">
-      <Image src="/images/exhibition-clock.png" alt="" aria-hidden width={583} height={533} className="pointer-events-none absolute -right-10 top-6 hidden w-64 opacity-15 lg:block" />
-      <div className={`${CONTAINER} relative py-12 md:py-20`}>
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4 md:mb-9">
-          <div>
-            <p className="a-eyebrow">한정 특가</p>
-            <h2 id="a-deal" className="a-title mt-1">타임특가</h2>
-            <p className="a-sub mt-2">이번 주만 이 가격이에요.</p>
-          </div>
-          <p className="inline-flex h-11 min-h-11 items-center gap-2 rounded-full bg-[var(--a-hwangto)] px-5 text-[13px] font-bold text-white md:text-[15px]">
-            남은 시간 <Countdown endsAt={endsAt} />
-          </p>
-        </div>
-        <AGrid products={pickVaried(deals, 5)} />
+    <SectionA id="a-deal" title="타임특가" sub="이번 주만 이 가격">
+      <div className="mb-4 flex min-h-11 items-center gap-2 text-[13px] font-bold text-[var(--a-sale)] md:mb-5">
+        <span>남음</span>
+        <Countdown endsAt={endsAt} />
       </div>
-    </section>
+      <AGrid products={pickVaried(deals, 5)} />
+    </SectionA>
   );
 }
 
@@ -128,13 +111,13 @@ const SIG = [
 ];
 export function ASignature() {
   return (
-    <SectionA id="a-sig" title="강화 대표 특산품" sub="강화에서만 나는 여섯 가지 맛" tone="ivory" deco="wave">
-      <DragScroll as="ul" className="-mr-4 flex gap-4 overflow-x-auto pb-2 pr-4 md:mr-0 md:grid md:grid-cols-6 md:gap-6 md:overflow-visible md:pr-0">
+    <SectionA id="a-sig" title="강화 대표 특산품" sub="강화에서만 나는 여섯 가지">
+      <DragScroll as="ul" className="-mr-4 flex gap-3 overflow-x-auto pb-1 pr-4 md:mr-0 md:grid md:grid-cols-6 md:gap-5 md:overflow-visible md:pr-0">
         {SIG.map((s) => (
-          <li key={s.label} className="w-32 shrink-0 md:w-auto">
-            <Link href={`/products?q=${encodeURIComponent(s.q)}`} className="group block text-center focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]">
-              <APhoto src={s.image} className="aspect-square rounded-[var(--a-radius)]" sizes="200px" />
-              <span className="mt-3 block text-[13px] font-semibold text-[var(--a-text)] md:text-[15px]">{s.label}</span>
+          <li key={s.label} className="w-28 shrink-0 md:w-auto">
+            <Link href={`/products?q=${encodeURIComponent(s.q)}`} className="group block focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]">
+              <APhoto src={s.image} className="a-thumb aspect-square" sizes="160px" />
+              <span className="mt-2 block text-center text-[13px] font-medium text-[var(--a-text)]">{s.label}</span>
             </Link>
           </li>
         ))}
@@ -143,47 +126,82 @@ export function ASignature() {
   );
 }
 
-/** 6. BEST */
+/** 6. BEST — 큰 순위 숫자 */
 export async function ABest() {
   const keys: (Category | undefined)[] = [undefined, ...(Object.keys(CATEGORIES) as Category[])];
   const lists = await Promise.all(keys.map((category) => getProducts({ category, sort: "best" })));
   return (
-    <SectionA id="a-best" title="BEST" sub="가장 많이 찾는 강화 특산품" moreHref="/products?sort=best" tone="white">
-      <Tabs label="BEST 분류" tabs={keys.map((k, i) => ({ label: k ? CATEGORIES[k] : "전체", panel: <AGrid products={pickVaried(lists[i], 5)} /> }))} />
+    <SectionA id="a-best" title="BEST" sub="가장 많이 찾는 강화 특산품" moreHref="/products?sort=best">
+      <Tabs
+        label="BEST 분류"
+        tabs={keys.map((k, i) => ({
+          label: k ? CATEGORIES[k] : "전체",
+          panel: <AGrid products={pickVaried(lists[i], 5)} ranked />,
+        }))}
+      />
     </SectionA>
   );
 }
 
-/** 7. 기획 배너 — 은은한 그라데이션 띠 */
-export function ABanner() {
+/** 7. 기획전 — 큰 이미지 + 컴팩트 상품 리스트 */
+export async function ABanner() {
+  const deals = pickVaried(await getTimeDeals(8), 4);
   return (
-    <section aria-label="강화도몰 기획 배너" className="a-bg-grad-warm py-10 md:py-14">
-      <div className={CONTAINER}>
-        <Link href="/deals" className="group relative block aspect-[1480/560] overflow-hidden rounded-[var(--a-radius)] shadow-[var(--a-shadow)] sm:aspect-[1480/450] md:aspect-[1480/367] md:rounded-2xl">
-          <Image src="/images/main/hero.webp" alt="강화도의 자연을 담다, 강화 대표 특산물 기획전 보러가기" fill sizes="(min-width:1280px) 1248px, 100vw" className="object-cover object-left transition duration-500 group-hover:scale-[1.02]" />
+    <SectionA id="a-banner" title="이달의 기획전" sub="강화 대표 특산물" moreHref="/deals">
+      <div className="grid gap-5 lg:grid-cols-12 lg:gap-8">
+        <Link href="/deals" className="group relative block aspect-[16/10] overflow-hidden lg:col-span-7 lg:aspect-auto lg:min-h-[380px]">
+          <Image
+            src="/images/main/hero.webp"
+            alt="강화도의 자연을 담다, 강화 대표 특산물 기획전"
+            fill
+            sizes="(min-width:1024px) 58vw, 100vw"
+            className="object-cover object-left transition duration-300 group-hover:scale-[1.04]"
+          />
         </Link>
+        <ul className="flex flex-col divide-y divide-[var(--a-line)] lg:col-span-5 lg:justify-center">
+          {deals.map((p) => {
+            const sale = p.salePrice;
+            const rate = sale ? Math.round((1 - sale / p.price) * 100) : 0;
+            return (
+              <li key={p.id}>
+                <Link href={`/products/${p.id}`} className="group flex min-h-11 items-center gap-3 py-3 focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]">
+                  <span className="a-thumb relative size-[72px] shrink-0 overflow-hidden bg-[#f3f3f3]">
+                    {p.image ? (
+                      <Image src={p.image} alt="" fill sizes="72px" className="object-cover transition duration-300 group-hover:scale-[1.04]" />
+                    ) : null}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="a-origin block">{p.origin}</span>
+                    <span className="a-name-one">{p.name}</span>
+                    <span className="a-price-row">
+                      {rate > 0 ? <span className="a-sale">{rate}%</span> : null}
+                      <span className="a-price">{formatPrice(sale ?? p.price)}</span>
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+          {!deals.length ? <li className="py-8 text-[13px] text-[var(--a-secondary)]">준비 중이에요.</li> : null}
+        </ul>
       </div>
-    </section>
+    </SectionA>
   );
 }
 
-/** 8. 제철 */
+/** 8. 제철 — 가로 스크롤 */
 export async function ASeasonal() {
   const [kimchi, jeot] = await Promise.all([getProducts({ q: "순무" }), getProducts({ q: "젓" })]);
-  const picks = [...kimchi.slice(0, 3), ...jeot.slice(0, 3), ...kimchi.slice(3), ...jeot.slice(3)].slice(0, 6);
+  const picks = pickVaried([...kimchi, ...jeot], 8);
   return (
-    <SectionA id="a-season" title="지금 강화는 순무·새우젓 제철" sub="알싸한 순무와 가을 추젓으로 김장 준비" tone="ssuk">
-      <div className="grid gap-6 lg:grid-cols-5">
-        <Link href="/products?q=%EC%88%9C%EB%AC%B4" className="group relative block min-h-72 overflow-hidden rounded-[var(--a-radius)] lg:col-span-2">
-          <APhoto src="/images/sunmu.webp" alt="강화 순무김치" className="aspect-[4/3] min-h-72 lg:aspect-auto lg:h-full" sizes="(min-width:1024px) 40vw, 100vw" />
-          <span className={`${btnWhite} absolute bottom-6 left-6`}>제철 상품 보기</span>
-        </Link>
-        <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:col-span-3">
-          {picks.map((p) => (
-            <li key={p.id}><ACard product={p} /></li>
-          ))}
-        </ul>
-      </div>
+    <SectionA id="a-season" title="지금 제철" sub="순무·새우젓으로 김장 준비" moreHref="/products?q=%EC%88%9C%EB%AC%B4">
+      <DragScroll as="ul" className="-mr-4 flex gap-3 overflow-x-auto pb-1 pr-4 md:gap-5">
+        {picks.map((p) => (
+          <li key={p.id} className="w-[42%] shrink-0 sm:w-[30%] md:w-[22%] lg:w-[18%]">
+            <ACard product={p} />
+          </li>
+        ))}
+      </DragScroll>
     </SectionA>
   );
 }
@@ -192,7 +210,7 @@ export async function ASeasonal() {
 export async function ANew() {
   const products = pickVaried((await getProducts({ sort: "new" })).filter((p) => p.image && !p.soldOut), 10);
   return (
-    <SectionA id="a-new" title="이번 주 신상품" sub="새로 들어온 강화 특산품" moreHref="/products?sort=new" tone="white" deco="wave">
+    <SectionA id="a-new" title="신상품" sub="이번 주 새로 들어온 특산품" moreHref="/products?sort=new">
       <AGrid products={products} />
     </SectionA>
   );
@@ -203,12 +221,8 @@ export async function AGift() {
   const sets = pickVaried(await getGiftSets(16), 5);
   if (!sets.length) return null;
   return (
-    <SectionA id="a-gift" title="강화 선물세트관" sub="인삼, 섬쌀, 젓갈을 선물 포장해 보내드려요" moreHref="/products?q=%EC%84%B8%ED%8A%B8" tone="ivory">
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 max-md:[&>li:nth-child(odd):last-child]:hidden">
-        {sets.map((p) => (
-          <li key={p.id}><ACard product={p} /></li>
-        ))}
-      </ul>
+    <SectionA id="a-gift" title="선물세트" sub="인삼·섬쌀·젓갈 선물 포장" moreHref="/products?q=%EC%84%B8%ED%8A%B8">
+      <AGrid products={sets} />
     </SectionA>
   );
 }
@@ -222,13 +236,16 @@ const STEPS = [
 ];
 export function AHowItShips() {
   return (
-    <SectionA id="a-ship" title="강화에서 식탁까지 하루" sub="산지직송은 이렇게" tone="white" deco="wave">
-      <ol className="grid gap-4 md:grid-cols-4 md:gap-5">
+    <SectionA id="a-ship" title="산지직송 과정" sub="강화에서 식탁까지">
+      <ol className="grid gap-0 md:grid-cols-4">
         {STEPS.map((s, i) => (
-          <li key={s.title} className="rounded-[var(--a-radius)] bg-[var(--a-ivory)] p-5 md:p-6">
-            <span className="text-[12px] font-bold tracking-wide text-[var(--a-ssuk)] md:text-[13px]">STEP {i + 1}</span>
-            <p className="a-title-sm mt-1">{s.title}</p>
-            <p className="mt-1 text-[13px] text-[var(--a-text-secondary)] md:text-[15px]">{s.desc}</p>
+          <li
+            key={s.title}
+            className={`border-t border-[var(--a-line)] py-5 md:border-t-0 md:border-l md:px-5 md:py-0 first:md:border-l-0 first:md:pl-0`}
+          >
+            <p className="a-label">0{i + 1}</p>
+            <p className="mt-2 text-[15px] font-bold text-[var(--a-text)]">{s.title}</p>
+            <p className="mt-1 text-[13px] text-[var(--a-secondary)]">{s.desc}</p>
           </li>
         ))}
       </ol>
@@ -236,24 +253,30 @@ export function AHowItShips() {
   );
 }
 
-/** 12. 생산자 — 은은한 쑥 그라데이션 */
+/** 12. 생산자 — 유일한 틴트 배경, 좌 사진 / 우 텍스트 매거진 */
 const STORY_IMAGES = ["/images/main/story-1.webp", "/images/main/story-2.webp", "/images/main/story-3.webp"];
 export async function AProducers() {
   const sellers = (await getFeaturedSellers()).slice(0, 3);
   if (!sellers.length) return null;
   return (
-    <SectionA id="a-prod" title="이달의 생산자" sub="누가 키웠는지 보여드려요" moreHref="/sellers/s1" tone="gradient" deco="leaf">
-      <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
+    <SectionA id="a-prod" title="이달의 생산자" sub="누가 키웠는지 보여드려요" moreHref="/sellers/s1" tone="paper">
+      <ul className="flex flex-col gap-8 md:gap-10">
         {sellers.map((s, i) => (
           <li key={s.id}>
             <Link
               href={`/sellers/${s.id}`}
-              className="a-card group block h-full focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]"
+              className={`group grid items-center gap-5 md:grid-cols-12 md:gap-8 focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)] ${i % 2 === 1 ? "md:[&>div:first-child]:order-2" : ""}`}
             >
-              <APhoto src={STORY_IMAGES[i % 3]} className="aspect-[3/2]" sizes="(min-width:768px) 33vw, 100vw" />
-              <div className="p-5">
-                <p className="text-[12px] font-semibold text-[var(--a-ssuk)] md:text-[13px]">{s.area} · {s.name}</p>
-                <p className="a-title-sm mt-2 leading-snug">“{s.interview}”</p>
+              <div className="md:col-span-7">
+                <APhoto src={STORY_IMAGES[i % 3]} className="a-thumb aspect-[3/2]" sizes="(min-width:768px) 58vw, 100vw" />
+              </div>
+              <div className="md:col-span-5">
+                <p className="a-label">{s.area}</p>
+                <p className="mt-2 text-[15px] font-bold text-[var(--a-text)]">{s.name}</p>
+                <p className="a-quote mt-4">“{s.interview}”</p>
+                <span className="mt-5 inline-flex min-h-11 items-center text-[13px] font-medium text-[var(--a-ssuk)] underline-offset-4 group-hover:underline">
+                  생산자 상점 보기 →
+                </span>
               </div>
             </Link>
           </li>
@@ -266,27 +289,39 @@ export async function AProducers() {
 /** 13. 농부 상점 배너 */
 export function AFarmerBanner() {
   return (
-    <section aria-label="자연을 담은 농부 상점" className="bg-[var(--a-ivory)] py-8 md:py-10">
-      <div className={CONTAINER}>
-        <Link href="/sellers/s1" className="relative block aspect-[1200/259] overflow-hidden rounded-[var(--a-radius)] shadow-[var(--a-shadow)]">
-          <img src="/images/main/farmer-banner.webp" alt="자연을 담은 농부 상점, 바로가기" width={2752} height={1536} className="absolute max-w-none" style={{ width: "121.92%", height: "315.29%", left: "-21.9%", top: "-108.68%" }} />
+    <section aria-label="자연을 담은 농부 상점" className="a-section-border bg-white">
+      <div className={`${CONTAINER} py-8 md:py-10`}>
+        <Link href="/sellers/s1" className="relative block aspect-[1200/259] overflow-hidden">
+          <img
+            src="/images/main/farmer-banner.webp"
+            alt="자연을 담은 농부 상점, 바로가기"
+            width={2752}
+            height={1536}
+            className="absolute max-w-none"
+            style={{ width: "121.92%", height: "315.29%", left: "-21.9%", top: "-108.68%" }}
+          />
         </Link>
       </div>
     </section>
   );
 }
 
-/** 14. 갯벌 배너 */
+/** 14. 갯벌 */
 export function ATidal() {
   return (
-    <section aria-labelledby="a-tidal" className="bg-white py-12 md:py-20">
-      <div className={CONTAINER}>
-        <div className="relative isolate overflow-hidden rounded-[var(--a-radius)] px-6 py-14 md:rounded-2xl md:px-12 md:py-20">
-          <Image src="/images/scenery2.webp" alt="" fill sizes="(min-width:1280px) 1248px, 100vw" className="-z-10 object-cover" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#2a4a36]/95 to-[#3f6b4f]/30" />
-          <Wave className="pointer-events-none absolute right-6 top-6 h-6 w-28 opacity-70" />
-          <h2 id="a-tidal" className="a-title max-w-lg !text-white">강화 갯벌과 해풍이 맛을 만들어요</h2>
-          <Link href="/products?category=seafood" className={`${btnWhite} mt-6`}>갯벌 수산물 보기</Link>
+    <section aria-labelledby="a-tidal" className="a-section-border bg-white">
+      <div className={`${CONTAINER} a-section`}>
+        <div className="relative isolate overflow-hidden">
+          <div className="relative aspect-[16/9] md:aspect-[21/8]">
+            <Image src="/images/scenery2.webp" alt="" fill sizes="(min-width:1280px) 1248px, 100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-black/35" />
+            <div className="absolute inset-0 flex flex-col items-start justify-end p-5 md:p-10">
+              <h2 id="a-tidal" className="max-w-md text-[22px] font-bold leading-snug tracking-tight text-white md:text-[28px]">
+                강화 갯벌과 해풍이 맛을 만들어요
+              </h2>
+              <Link href="/products?category=seafood" className="a-btn-ghost mt-5">갯벌 수산물 보기 →</Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -301,16 +336,14 @@ const STORIES = [
 ];
 export function AStories() {
   return (
-    <SectionA id="a-story" title="강화 이야기" sub="읽을거리" tone="ivory" deco="wave">
-      <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
+    <SectionA id="a-story" title="강화 이야기" sub="읽을거리">
+      <ul className="grid gap-6 md:grid-cols-3 md:gap-5">
         {STORIES.map((s) => (
           <li key={s.title}>
             <Link href="/help" className="group block focus-visible:outline-2 focus-visible:outline-[var(--a-ssuk)]">
-              <div className="relative">
-                <APhoto src={s.image} className="aspect-[4/3] rounded-[var(--a-radius)]" sizes="(min-width:768px) 33vw, 100vw" />
-                <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-[12px] font-semibold text-[var(--a-ssuk)] md:text-[13px]">{s.tag}</span>
-              </div>
-              <h3 className="a-title-sm mt-4 group-hover:underline">{s.title}</h3>
+              <APhoto src={s.image} className="a-thumb aspect-[4/3]" sizes="(min-width:768px) 33vw, 100vw" />
+              <p className="a-label mt-3">{s.tag}</p>
+              <h3 className="mt-1 text-[15px] font-bold leading-snug text-[var(--a-text)] group-hover:underline">{s.title}</h3>
             </Link>
           </li>
         ))}
@@ -323,17 +356,15 @@ const FESTIVAL_IMAGES = ["/images/main/festival-1.webp", "/images/main/festival-
 export async function AFestivals() {
   const festivals = await getFestivals();
   return (
-    <SectionA id="a-fest" title="축제·행사" sub="강화에서 열려요" tone="ssuk">
-      <ul className="grid gap-4 sm:grid-cols-3 md:gap-5">
+    <SectionA id="a-fest" title="축제·행사" sub="강화에서 열려요">
+      <ul className="grid gap-6 sm:grid-cols-3 md:gap-5">
         {festivals.map((f, i) => (
-          <li key={f.id} className="a-card overflow-hidden">
-            <div className="relative aspect-square">
+          <li key={f.id}>
+            <div className="relative aspect-square overflow-hidden">
               <Image src={f.image ?? FESTIVAL_IMAGES[i % 3]} alt="" fill loading="eager" sizes="(min-width:640px) 33vw, 100vw" className="object-cover" />
             </div>
-            <div className="p-5">
-              <p className="a-title-sm">{f.title}</p>
-              <p className="a-caption mt-1">{f.date && `${f.date} · `}{f.summary}</p>
-            </div>
+            <p className="mt-3 text-[15px] font-bold text-[var(--a-text)]">{f.title}</p>
+            <p className="mt-1 text-[12px] text-[var(--a-secondary)]">{f.date && `${f.date} · `}{f.summary}</p>
           </li>
         ))}
       </ul>
@@ -347,7 +378,7 @@ export async function ARegion() {
   const [sellers, products] = await Promise.all([getSellers(), getProducts({ sort: "best" })]);
   const areaOf = new Map(sellers.map((s) => [s.id, s.area]));
   return (
-    <SectionA id="a-region" title="산지에서 고르기" sub="13개 읍·면" tone="white" deco="wave">
+    <SectionA id="a-region" title="산지에서 고르기" sub="13개 읍·면">
       <Tabs
         label="강화 읍·면"
         variant="chip"
@@ -360,7 +391,7 @@ export async function ARegion() {
   );
 }
 
-/** 17. 후기 */
+/** 17. 후기 — 박스 없이 인용 타이포 */
 export function AReviews() {
   const names = new Map(PRODUCTS.map((p) => [p.id, p.name]));
   const picked = new Set<string>();
@@ -372,15 +403,18 @@ export function AReviews() {
   }).slice(0, 3);
   if (!reviews.length) return null;
   return (
-    <SectionA id="a-review" title="구매 후기" sub="먼저 받아본 분들" tone="ivory">
-      <ul className="grid gap-4 md:grid-cols-2 md:gap-5">
-        {reviews.map((r) => (
-          <li key={r.id} className="a-card p-6">
-            <p className="text-[18px] font-bold leading-none text-[var(--a-hwangto-text)]" aria-label={`별점 ${r.rating}점`}>
+    <SectionA id="a-review" title="구매 후기" sub="먼저 받아본 분들">
+      <ul className="grid gap-0 md:grid-cols-2">
+        {reviews.map((r, i) => (
+          <li
+            key={r.id}
+            className={`border-t border-[var(--a-line)] py-6 md:border-t-0 md:px-6 md:py-0 ${i === 0 ? "md:border-r md:pl-0" : ""} ${i === 1 ? "md:pr-0" : ""} ${i > 1 ? "md:col-span-2 md:border-t md:pt-6 md:mt-6" : ""}`}
+          >
+            <p className="text-[13px] font-bold text-[var(--a-ssuk)]" aria-label={`별점 ${r.rating}점`}>
               {"★".repeat(r.rating)}
             </p>
-            <p className="mt-3 text-[14px] leading-relaxed text-[var(--a-text)] md:text-[15px]">{r.body}</p>
-            <Link href={`/products/${r.productId}`} className="mt-4 inline-flex min-h-11 items-center text-[12px] text-[var(--a-text-secondary)] hover:text-[var(--a-ssuk)] md:text-[13px]">
+            <p className="mt-3 text-[15px] leading-relaxed text-[var(--a-text)] md:text-[16px]">{r.body}</p>
+            <Link href={`/products/${r.productId}`} className="mt-4 inline-flex min-h-11 items-center text-[12px] text-[var(--a-secondary)] hover:text-[var(--a-text)]">
               {r.author} · {names.get(r.productId)}
             </Link>
           </li>
@@ -393,15 +427,14 @@ export function AReviews() {
 /** 18. 입점 CTA */
 export function ASellerCta() {
   return (
-    <section aria-labelledby="a-cta" className="bg-[var(--a-ivory)] pb-12 md:pb-20">
-      <div className={CONTAINER}>
-        <div className="relative flex flex-col gap-6 overflow-hidden rounded-[var(--a-radius)] bg-[var(--a-ssuk)] p-8 md:flex-row md:items-center md:justify-between md:rounded-2xl md:p-12">
-          <Leaf className="pointer-events-none absolute -bottom-4 right-10 size-32 opacity-50" />
+    <section aria-labelledby="a-cta" className="a-section-border bg-white">
+      <div className={`${CONTAINER} a-section`}>
+        <div className="flex flex-col gap-5 border border-[var(--a-line)] px-6 py-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-10">
           <div>
-            <h2 id="a-cta" className="a-title !text-white">강화 생산자라면, 내 상점을 열어보세요</h2>
-            <p className="mt-2 text-[14px] text-white/90 md:text-[15px]">상품 등록부터 정산까지 함께해요.</p>
+            <h2 id="a-cta" className="a-title">강화 생산자라면, 내 상점을 열어보세요</h2>
+            <p className="a-sub mt-2">상품 등록부터 정산까지 함께해요.</p>
           </div>
-          <Link href="/seller/apply" className={`${btnWhite} relative shrink-0`}>입점 신청하기</Link>
+          <Link href="/seller/apply" className="a-btn shrink-0">입점 신청하기</Link>
         </div>
       </div>
     </section>
@@ -412,33 +445,33 @@ export function ASellerCta() {
 export async function ANotice() {
   const notices = await getNotices();
   return (
-    <section aria-label="공지사항과 고객센터" className="bg-white">
-      <div className={`${CONTAINER} grid gap-4 py-12 md:grid-cols-2 md:gap-5 md:py-20`}>
-        <div className="rounded-[var(--a-radius)] bg-[var(--a-ivory)] p-6 md:p-8">
-          <h2 className="a-title-sm">공지사항</h2>
-          <ul className="mt-3 divide-y divide-stone-200">
+    <section aria-label="공지사항과 고객센터" className="a-section-border bg-white">
+      <div className={`${CONTAINER} grid gap-8 py-10 md:grid-cols-2 md:gap-10 md:py-14`}>
+        <div>
+          <h2 className="a-title">공지사항</h2>
+          <ul className="mt-4 divide-y divide-[var(--a-line)] border-t border-[var(--a-line)]">
             {notices.slice(0, 3).map((n) => (
               <li key={n.id}>
-                <Link href="/help" className="flex min-h-11 items-center justify-between gap-4 text-[14px] text-[var(--a-text)] hover:text-[var(--a-ssuk)] md:text-[15px]">
+                <Link href="/help" className="flex min-h-11 items-center justify-between gap-4 text-[14px] text-[var(--a-text)] hover:text-[var(--a-ssuk)]">
                   <span className="line-clamp-1">{n.title}</span>
-                  <span className="a-caption shrink-0">{n.createdAt}</span>
+                  <span className="shrink-0 text-[12px] text-[var(--a-secondary)]">{n.createdAt}</span>
                 </Link>
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-[var(--a-radius)] bg-[var(--a-ssuk-soft)] p-6 md:p-8">
-          <h2 className="a-title-sm">고객센터</h2>
-          <p className="mt-3 text-[28px] font-bold tracking-tight text-[var(--a-ssuk)] md:text-[32px]">1644-3777</p>
-          <p className="mt-1 text-[13px] text-[var(--a-text-secondary)] md:text-[15px]">평일 09:00–18:00 · 주말·공휴일 휴무</p>
-          <Link href="/help" className={`${btnSsuk} mt-5`}>자주 묻는 질문</Link>
+        <div>
+          <h2 className="a-title">고객센터</h2>
+          <p className="mt-4 text-[28px] font-bold tracking-tight text-[var(--a-text)] md:text-[32px]">1644-3777</p>
+          <p className="mt-1 text-[13px] text-[var(--a-secondary)]">평일 09:00–18:00 · 주말·공휴일 휴무</p>
+          <Link href="/help" className="a-btn mt-5">자주 묻는 질문</Link>
         </div>
       </div>
     </section>
   );
 }
 
-/** 20. 배송 안내 띠 */
+/** 20. 배송 안내 */
 const INFO = [
   { title: "무료배송", desc: "3만 원 이상 구매 시" },
   { title: "냉장·냉동 출고", desc: "월~목 출고" },
@@ -446,12 +479,12 @@ const INFO = [
 ];
 export function AShipping() {
   return (
-    <section aria-label="배송 안내" className="border-t border-stone-200 bg-[var(--a-ivory)]">
-      <ul className={`${CONTAINER} grid gap-3 py-5 md:grid-cols-3`}>
+    <section aria-label="배송 안내" className="a-section-border bg-white">
+      <ul className={`${CONTAINER} grid gap-2 py-5 md:grid-cols-3 md:gap-4`}>
         {INFO.map((i) => (
-          <li key={i.title} className="text-[13px] md:text-[15px]">
+          <li key={i.title} className="text-[13px]">
             <span className="font-bold text-[var(--a-ssuk)]">{i.title}</span>
-            <span className="ml-2 text-[var(--a-text-secondary)]">{i.desc}</span>
+            <span className="ml-2 text-[var(--a-secondary)]">{i.desc}</span>
           </li>
         ))}
       </ul>

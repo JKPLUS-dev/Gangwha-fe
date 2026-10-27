@@ -54,7 +54,7 @@ export function BannerCarousel({ banners, label = "기획전 배너" }: { banner
     <div role="region" aria-roledescription="carousel" aria-label={label} className="relative"
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
-      <div className="overflow-hidden rounded-2xl md:cursor-grab" style={{ aspectRatio: `${width} / ${height}` }}
+      <div className="overflow-hidden rounded md:cursor-grab" style={{ aspectRatio: `${width} / ${height}` }}
         onPointerDown={(e) => {
           if (e.pointerType !== "mouse" || e.button !== 0 || n < 2) return;
           drag.current = { id: e.pointerId, x: e.clientX, w: e.currentTarget.clientWidth, moved: false };
@@ -110,13 +110,13 @@ export function BannerCarousel({ banners, label = "기획전 배너" }: { banner
       </div>
       {n > 1 && (
         <>
-          <button type="button" aria-label="이전 배너" onClick={prev} className="absolute left-2 top-[calc(50%-22px)] grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-2xl leading-none text-stone-800 shadow hover:bg-white focus-visible:outline-2 focus-visible:outline-brand">‹</button>
-          <button type="button" aria-label="다음 배너" onClick={next} className="absolute right-2 top-[calc(50%-22px)] grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-2xl leading-none text-stone-800 shadow hover:bg-white focus-visible:outline-2 focus-visible:outline-brand">›</button>
+          <button type="button" aria-label="이전 배너" onClick={prev} className="left-4 absolute top-[calc(50%-22px)] z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-[#F8F8F8]/80 shadow-[0_1px_3px_rgba(0,0,0,0.15)] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="#7B7B7B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+          <button type="button" aria-label="다음 배너" onClick={next} className="right-4 absolute top-[calc(50%-22px)] z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-[#F8F8F8]/80 shadow-[0_1px_3px_rgba(0,0,0,0.15)] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="#7B7B7B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
           <div className="mt-1 flex justify-center">
             {banners.map((b, i) => (
               <button key={b.id} type="button" aria-label={`${i + 1}번째 배너 보기`} aria-current={i === real ? "true" : undefined} onClick={() => go(i + 1)}
                 className="grid size-11 place-items-center focus-visible:outline-2 focus-visible:outline-brand">
-                <span className={`block h-2 rounded-full transition-all ${i === real ? "w-6 bg-[#b91c1c]" : "w-2 bg-stone-500"}`} />
+                <span className={`block h-2 rounded-full transition-all ${i === real ? "w-6 bg-[#3f6b4f]" : "w-2 bg-stone-500"}`} />
               </button>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import { Noto_Serif_KR } from "next/font/google";
 import localFont from "next/font/local";
+import type { ReactNode } from "react";
 
 const pretendard = localFont({
   src: "../../../../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
@@ -7,7 +8,6 @@ const pretendard = localFont({
   display: "swap",
   variable: "--font-a-sans",
 });
-import type { ReactNode } from "react";
 
 const notoSerifKr = Noto_Serif_KR({
   weight: ["600"],
@@ -16,7 +16,7 @@ const notoSerifKr = Noto_Serif_KR({
   variable: "--font-a-serif",
 });
 
-/** /a 리뉴얼 전용 레이아웃: 제목용 Noto Serif KR + .home-a 스코프 */
+/** /a 전용: Pretendard 본문·제목, Noto Serif KR은 히어로·생산자 인용만 */
 export default function HomeALayout({ children }: { children: ReactNode }) {
-  return <div className={`home-a ${notoSerifKr.variable} ${pretendard.variable}`}>{children}</div>;
+  return <div className={`home-a ${pretendard.variable} ${notoSerifKr.variable}`}>{children}</div>;
 }
