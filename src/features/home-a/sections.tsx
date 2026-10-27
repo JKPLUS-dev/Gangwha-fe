@@ -335,7 +335,7 @@ export function AReviews() {
   if (!reviews.length) return null;
   return (
     <SectionA id="a-review" title="구매 후기" sub="먼저 받아본 분들">
-      <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
+      <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
         {reviews.map((r) => (
           <li key={r.id} className="rounded-3xl bg-white p-6 shadow-[0_2px_12px_rgba(47,93,58,0.06)]">
             <p className="text-[#c2410c]" aria-label={`별점 ${r.rating}점`}>{"★".repeat(r.rating)}</p>
